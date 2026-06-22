@@ -1,0 +1,28 @@
+{
+  "kind": "collectionType",
+  "collectionName": "websites",
+  "info": {
+    "singularName": "website",
+    "pluralName": "websites",
+    "displayName": "Website"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "client_name": {
+      "type": "string"
+    },
+    "slug": {
+      "type": "string"
+    },
+    "page_sections": {
+      "type": "dynamiczone",
+      "components": [
+        "sections.hero",
+        "sections.features"
+      ]
+    }
+  }
+}
