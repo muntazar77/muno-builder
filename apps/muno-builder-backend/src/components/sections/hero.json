@@ -1,0 +1,32 @@
+{
+  "collectionName": "components_sections_heroes",
+  "info": {
+    "displayName": "Hero",
+    "icon": "bulletList"
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string"
+    },
+    "description": {
+      "type": "text"
+    },
+    "background_image": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
+    },
+    "cta_button": {
+      "type": "component",
+      "component": "shared.cta-button",
+      "repeatable": false
+    }
+  },
+  "config": {}
+}
