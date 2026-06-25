@@ -1,0 +1,20 @@
+---
+// src/components/templates/restaurant-light/About.astro
+const { title, description, image } = Astro.props;
+const STRAPI_BASE_URL = import.meta.env.PUBLIC_STRAPI_URL || 'http://localhost:1337';
+const imgUrl = image?.url 
+  ? `${STRAPI_BASE_URL}${image.url}` 
+  : "/fallback2.png";
+---
+<section id="about" class="py-20 bg-white px-6">
+  <div class="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+    <div class="space-y-6 text-left">
+      <span class="text-orange-500 font-bold text-xs uppercase tracking-wider">Unsere Geschichte</span>
+      <h2 class="text-3xl md:text-4xl font-black text-gray-950 leading-tight">{title || "Über uns"}</h2>
+      <p class="text-gray-600 leading-relaxed text-sm md:text-base">{description}</p>
+    </div>
+    <div class="rounded-3xl overflow-hidden bg-gray-100 aspect-[4/3] shadow-md">
+      <img src={imgUrl} alt={title} class="w-full h-full object-cover" />
+    </div>
+  </div>
+</section>

@@ -1,0 +1,30 @@
+---
+// src/components/templates/modern-light/FeaturesLight.astro
+const features = [
+  { icon: "⚡", title: "Blitzschnell", desc: "Keine langen Wartezeiten. Dein Essen steht in wenigen Minuten heiß vor dir." },
+  { icon: "🌱", title: "Beste Zutaten", desc: "Täglich frisches Gemüse aus der Region und 100% zertifiziertes Fleisch." },
+  { icon: "🛵", title: "Lieferung & Pick-Up", desc: "Bestelle online zum Abholen oder lass es dir bequem nach Hause liefern." }
+];
+---
+<section class="py-20 px-6 bg-white border-t border-gray-100">
+  <div class="max-w-5xl mx-auto">
+    
+    <div class="text-center mb-16 space-y-2">
+      <h2 class="text-3xl md:text-4xl font-black text-gray-900 tracking-tight">Warum wir?</h2>
+      <p class="text-gray-500 text-sm max-w-sm mx-auto">Das macht unser Essen und unseren Service so besonders.</p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+      {features.map((item) => (
+        <div class="bg-amber-50/40 p-8 rounded-3xl border border-amber-100 hover:border-orange-200 hover:bg-amber-50/80 transition-all duration-300 text-center space-y-4">
+          <div class="w-14 h-14 bg-white text-2xl rounded-2xl shadow-sm flex items-center justify-center mx-auto border border-amber-100">
+            {item.icon}
+          </div>
+          <h3 class="text-lg font-extrabold text-gray-900">{item.title}</h3>
+          <p class="text-gray-600 text-sm leading-relaxed">{item.desc}</p>
+        </div>
+      ))}
+    </div>
+
+  </div>
+</section>

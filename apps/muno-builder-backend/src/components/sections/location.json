@@ -1,0 +1,25 @@
+{
+  "collectionName": "components_sections_locations",
+  "info": {
+    "displayName": "Location"
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string"
+    },
+    "address": {
+      "type": "text"
+    },
+    "google_maps_url": {
+      "type": "text"
+    },
+    "email": {
+      "type": "string"
+    },
+    "phone": {
+      "type": "integer"
+    }
+  },
+  "config": {}
+}

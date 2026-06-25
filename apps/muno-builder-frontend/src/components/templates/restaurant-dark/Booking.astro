@@ -1,0 +1,95 @@
+---
+// src/components/templates/luxury-theme/Booking.astro
+const { restaurantSlug } = Astro.props;
+---
+<section id="reservation" class="py-28 lg:py-40 bg-[#100D0A] text-[#F2EDE4]">
+  <div class="max-w-7xl mx-auto px-6 lg:px-10">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-14">
+      
+      <div class="lg:col-span-5">
+        <h2 class="font-serif font-light text-4xl mb-4">Tisch <span class="text-[#C8973A] italic">reservieren</span></h2>
+        <p class="text-gray-400 text-sm">Bitte füllen Sie das Formular aus. Wir bestätigen Ihre Reservierung per SMS oder Anruf.</p>
+      </div>
+
+      <div class="lg:col-span-7">
+        <!-- 💡 أضفنا الـ ID ومعرف الـ slug التابع للمطعم الحالي في حقل مخفي -->
+        <form id="restaurant-booking-form" data-slug={restaurantSlug} class="space-y-6">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <input type="text" id="b-name" required placeholder="Ihr Name" class="w-full bg-[#161310] border border-gray-800 p-4 text-sm text-white focus:border-[#C8973A] outline-none" />
+            <input type="tel" id="b-phone" required placeholder="Telefonnummer" class="w-full bg-[#161310] border border-gray-800 p-4 text-sm text-white focus:border-[#C8973A] outline-none" />
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+            <input type="number" id="b-guests" min="1" max="20" value="2" required class="w-full bg-[#161310] border border-gray-800 p-4 text-sm text-white focus:border-[#C8973A] outline-none" />
+            <input type="date" id="b-date" required class="w-full bg-[#161310] border border-gray-800 p-4 text-sm text-white focus:border-[#C8973A] outline-none" />
+            <input type="time" id="b-time" required class="w-full bg-[#161310] border border-gray-800 p-4 text-sm text-white focus:border-[#C8973A] outline-none" />
+          </div>
+          
+          <!-- رسائل النجاح أو الفشل -->
+          <div id="booking-status-message" class="hidden text-sm p-4 rounded-xl font-bold"></div>
+
+          <button type="submit" id="b-submit-btn" class="w-full py-4 border border-[#C8973A] text-[#C8973A] text-xs tracking-widest uppercase font-bold bg-transparent hover:bg-[#C8973A] hover:text-[#0C0A08] transition-all cursor-pointer">
+            Anfrage senden
+          </button>
+        </form>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<script>
+  function setupBookingSubmission() {
+    const form = document.getElementById('restaurant-booking-form') as HTMLFormElement;
+    const msgBox = document.getElementById('booking-status-message');
+    const submitBtn = document.getElementById('b-submit-btn') as HTMLButtonElement;
+
+    form?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (!msgBox || !submitBtn) return;
+
+      // تغيير مظهر الزر أثناء الإرسال لراحة المستخدم الأنيقة
+      submitBtn.disabled = true;
+      submitBtn.innerText = "WIRD GESENDET...";
+
+const payload = {
+  name: (document.getElementById('b-name') as HTMLInputElement).value,
+  phone: (document.getElementById('b-phone') as HTMLInputElement).value,
+  guests: (document.getElementById('b-guests') as HTMLInputElement).value,
+  date: (document.getElementById('b-date') as HTMLInputElement).value,
+  time: (document.getElementById('b-time') as HTMLInputElement).value,
+  
+  // 💡 حل جذري: قراءة الـ slug مباشرة من رابط المتصفح الحالي (مثل /bella-italia)
+  restaurantSlug: window.location.pathname.split('/').pop() 
+};
+
+      try {
+        const res = await fetch('/api/booking', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        const data = await res.json();
+
+        msgBox.classList.remove('hidden', 'bg-red-100', 'text-red-700', 'bg-emerald-100', 'text-emerald-700');
+        
+        if (res.ok) {
+          msgBox.classList.add('bg-emerald-50', 'text-emerald-700', 'block');
+          msgBox.innerText = "Vielen Dank! Ihre Reservierungsanfrage wurde erfolgreich gesendet.";
+          form.reset();
+        } else {
+          msgBox.classList.add('bg-red-50', 'text-red-700', 'block');
+          msgBox.innerText = data.error || "Ein Fehler ist aufgetreten.";
+        }
+      } catch (err) {
+        msgBox.classList.add('bg-red-50', 'text-red-700', 'block');
+        msgBox.innerText = "Verbindung zum Server fehlgeschlagen.";
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.innerText = "ANFRAGE SENDEN";
+      }
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', setupBookingSubmission);
+</script>

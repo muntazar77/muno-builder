@@ -1,0 +1,85 @@
+---
+// src/components/sections/RenderSections.astro
+
+// 1. استيراد مكونات الثيم المظلم (restaurant-dark)
+import DarkHeader from '../templates/restaurant-dark/Header.astro';
+import DarkFooter from '../templates/restaurant-dark/Footer.astro';
+import DarkHero from '../templates/restaurant-dark/Hero.astro';
+// import DarkQuickInfo from '../templates/restaurant-dark/QuickInfo.astro';
+import DarkFeatures from '../templates/restaurant-dark/Features.astro';
+import DarkAbout from '../templates/restaurant-dark/About.astro';
+import DarkReservation from '../templates/restaurant-dark/Booking.astro';
+import DarkGallery from '../templates/restaurant-dark/Gallery.astro';
+import DarkTestimonials from '../templates/restaurant-dark/Testimonials.astro';
+import DarkLocation from '../templates/restaurant-dark/Location.astro';
+
+// 2. استيراد مكونات الثيم الفاتح (restaurant-light)
+import LightHeader from '../templates/restaurant-light/Header.astro';
+import LightFooter from '../templates/restaurant-light/Footer.astro';
+import LightHero from '../templates/restaurant-light/Hero.astro';
+import QuickInfo from '../templates/restaurant-light/QuickInfo.astro';
+import Featured from '../templates/restaurant-light/Featured.astro';
+import About from '../templates/restaurant-light/About.astro';
+import LightReservation from '../templates/restaurant-light/Reservation.astro';
+import LightGallery from '../templates/restaurant-light/Gallery.astro';
+import Testimonials from '../templates/restaurant-light/Testimonials.astro';
+import Location from '../templates/restaurant-light/Location.astro';
+import Menu from '../common/Menu.astro';        // 💡 استيراد مكون المنيو المشترك
+import QRCodeSection from '../common/QRCodeSection.astro'; // 💡 استيراد مكون الـ QR المشترك
+// استلام السكاشن واسم التمبلت ونوع المكون المطلوب رندرته
+const { sections, templateName = 'luxury', renderZone } = Astro.props;
+
+// خريطة لربط الهيدر والفوتر والسكاشن حسب التمبلت المختار
+const templatesRegistry: Record<string, any> = {
+  'luxury': {
+    'header': DarkHeader,
+    'footer': DarkFooter,
+    'sections.hero': DarkHero,
+    // 'sections.quick-info': DarkQuickInfo,
+    'sections.features': DarkFeatures,
+    'sections.about': DarkAbout,
+    'sections.booking': DarkReservation,
+    'sections.gallery': DarkGallery,
+    'sections.testimonials': DarkTestimonials,
+    'sections.location': DarkLocation,
+    'sections.food-menu': Menu,        // 💡 تسجيل المنيو ديناميكياً
+    'sections.qr-code': QRCodeSection
+  },
+  'light': {
+    'header': LightHeader,
+    'footer': LightFooter,
+    'sections.hero': LightHero,
+    'sections.quick-info': QuickInfo,
+    'sections.features': Featured,
+    'sections.about': About,
+    'sections.booking': LightReservation,
+    'sections.gallery': LightGallery,
+    'sections.testimonials': Testimonials,
+    'sections.location': Location,
+    'sections.food-menu': Menu,        // 💡 تسجيل المنيو ديناميكياً
+    'sections.qr-code': QRCodeSection
+  }
+};
+
+const currentRegistry = templatesRegistry[templateName] || templatesRegistry['luxury'];
+
+// 💡 حل مشكلة الـ Compiler: نقوم باستخراج المكون وحفظه في متغير يبدأ بحرف كبير دائماً
+const DynamicComponent = currentRegistry[renderZone || ''];
+---
+
+<!-- 💡 هنا نضع منطق الرندرة في حقل الـ HTML في الأسفل لحماية الكود وتجنب أخطاء esbuild -->
+{renderZone === 'header' && DynamicComponent && (
+  <DynamicComponent clientName={Astro.props.clientName} templateName={templateName} />
+)}
+
+{renderZone === 'footer' && DynamicComponent && (
+  <DynamicComponent clientName={Astro.props.clientName} address={Astro.props.address} templateName={templateName} />
+)}
+
+<!-- معالجة السكاشن الديناميكية القادمة كمصفوفة من الباكيند (مثل الـ Hero والـ Features) -->
+{!renderZone && sections && sections.map((section: any) => {
+  const ComponentToRender = currentRegistry[section.__component];
+  return ComponentToRender ? (
+    <ComponentToRender {...section} restaurantSlug={Astro.params.slug} />
+  ) : null;
+})}

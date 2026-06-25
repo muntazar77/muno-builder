@@ -1,0 +1,76 @@
+---
+// src/components/templates/restaurant-dark/Hero.astro
+
+// استقبال البيانات المسطحة القادمة من الـ Spread Operator {...section}
+const { title, description, background_image, cta_button } = Astro.props;
+const STRAPI_BASE_URL = import.meta.env.PUBLIC_STRAPI_URL || 'http://localhost:1337';
+
+// 💡 1. استخراج مسار الصورة ديناميكياً لـ Strapi v5
+const imgUrl = background_image?.url 
+  ? `${STRAPI_BASE_URL}${background_image.url}` 
+  : "https://unsplash.com";
+
+// 💡 2. استخراج بيانات الزر الديناميكي المكتوب في لوحة التحكم
+const buttonText = cta_button?.text || "Tisch reservieren";
+const buttonUrl = cta_button?.url || "#reservation";
+---
+<section class="relative w-full overflow-hidden min-h-screen flex flex-col justify-between bg-[#0C0A08]">
+  
+  <!-- حقن الصورة الديناميكية القادمة من قاعدة البيانات كخلفية -->
+  <div class="absolute inset-0 z-0">
+    <img
+      src={imgUrl}
+      alt={title}
+      class="w-full h-full object-cover filter brightness-[0.30] saturate-[0.65]"
+    />
+    <div class="absolute inset-0 bg-gradient-to-b from-[#0C0A08]/20 via-[#0C0A08]/50 to-[#0C0A08]" />
+  </div>
+
+  <div class="relative z-10 max-w-7xl mx-auto px-6 lg:px-10 flex flex-col justify-between min-h-screen w-full pt-36 pb-12 lg:pt-44">
+    <div>
+      <div class="flex items-center gap-4">
+        <div class="h-px w-10 bg-[#C8973A]" />
+        <span class="uppercase tracking-[0.32em] text-[#C8973A] text-[0.6rem] font-medium">
+          Fine Dining · Dynamic Platform
+        </span>
+      </div>
+    </div>
+
+    <div class="my-auto pt-12 lg:pt-0">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-end">
+        <div class="lg:col-span-8">
+          <!-- طباعة العنوان ديناميكياً -->
+          <h1 class="text-[#F2EDE4] font-serif font-light leading-[0.92] tracking-tight text-left text-[clamp(2.8rem,8vw,8.5rem)] italic" set:html={title}>
+       
+        </div>
+
+        <div class="lg:col-span-4 flex flex-col gap-8 lg:items-end lg:text-right">
+          <!-- طباعة الوصف ديناميكياً -->
+          <p class="max-w-xs text-[#F2EDE4]/55 text-sm font-light leading-relaxed">
+            {description}
+          </p>
+          
+          <div class="flex flex-col sm:flex-row lg:flex-col gap-4 w-full sm:w-auto lg:w-full">
+            <!-- زر الأكشن الديناميكي بالكامل بالرابط والنص المستخرجين من الباكيند -->
+            <a
+              href={buttonUrl}
+              class="w-full sm:px-9 py-4 bg-[#C8973A] text-[#0C0A08] text-[0.68rem] font-bold tracking-[0.24em] uppercase text-center hover:bg-[#D4A84B] transition-all duration-300"
+            >
+              {buttonText}
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- الإحصائيات السفلية التزيينية المتبقية -->
+    <div class="mt-12 pt-8 flex items-center justify-between border-t border-[#F2EDE4]/10">
+      <div class="flex gap-8">
+        <div>
+          <div class="text-[#C8973A] font-serif text-2xl font-semibold leading-none">3</div>
+          <div class="text-[#F2EDE4]/45 text-[0.55rem] tracking-[0.2em] uppercase mt-2">Michelin-Sterne</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

@@ -21,8 +21,48 @@
       "type": "dynamiczone",
       "components": [
         "sections.hero",
-        "sections.features"
+        "sections.features",
+        "sections.testimonials",
+        "sections.location",
+        "sections.about",
+        "sections.food-menu",
+        "sections.qr-code"
       ]
+    },
+    "dishes": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::dish.dish",
+      "inversedBy": "websites"
+    },
+    "template_name": {
+      "type": "enumeration",
+      "enum": [
+        "luxury",
+        "light"
+      ]
+    },
+    "bookings": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::booking.booking",
+      "mappedBy": "websites"
+    },
+    "footer_link_groups": {
+      "type": "component",
+      "component": "shared.link-group",
+      "repeatable": true
+    },
+    "header_links": {
+      "type": "component",
+      "component": "shared.link-item",
+      "repeatable": true
+    },
+    "pages": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::page.page",
+      "mappedBy": "website"
     }
   }
 }

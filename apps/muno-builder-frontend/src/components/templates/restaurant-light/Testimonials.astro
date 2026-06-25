@@ -1,0 +1,22 @@
+---
+// src/components/templates/restaurant-light/Testimonials.astro
+const { section_title, reviews } = Astro.props;
+---
+<section class="py-20 bg-gray-50 px-6 border-t border-b border-gray-100">
+  <div class="max-w-4xl mx-auto space-y-12">
+    <div class="text-center">
+      <h2 class="text-3xl font-black text-gray-950 tracking-tight">{section_title || "Das sagen unsere Gäste"}</h2>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      {reviews && reviews.map((r: any) => (
+        <div class="bg-white p-8 rounded-2xl border border-gray-100 shadow-sm space-y-3 text-left">
+          <div class="text-orange-400 text-sm">
+            {"⭐".repeat(r.stars || 5)}
+          </div>
+          <p class="text-gray-600 text-sm italic leading-relaxed">"{r.text}"</p>
+          <h4 class="font-bold text-gray-900 text-sm text-right">— {r.name}</h4>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

@@ -1,0 +1,24 @@
+---
+// src/components/templates/restaurant-light/Gallery.astro
+const images = [
+  "/fallback2.png",
+  "/fallback2.png",
+  "/fallback2.png",
+  "/fallback2.png"
+];
+---
+<section class="py-20 bg-white px-6">
+  <div class="max-w-6xl mx-auto space-y-12">
+    <div class="text-center">
+      <span class="text-orange-500 font-bold text-xs uppercase tracking-wider">Impressionen</span>
+      <h2 class="text-3xl md:text-4xl font-black text-gray-900 mt-1">Unser Laden</h2>
+    </div>
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+      {images.map((img, i) => (
+        <div class="aspect-square rounded-2xl overflow-hidden bg-gray-100 border border-gray-100 shadow-sm group">
+          <img src={img} alt={`Gallery ${i}`} class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

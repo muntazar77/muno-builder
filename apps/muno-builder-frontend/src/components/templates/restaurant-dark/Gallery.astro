@@ -1,0 +1,90 @@
+---
+// src/components/Gallery.astro
+// صور تجريبية عالية الدقة من Unsplash تناسب المطاعم الراقية
+const images = [
+  "https://unsplash.com",
+  "https://unsplash.com",
+  "https://unsplash.com",
+  "https://unsplash.com",
+  "https://unsplash.com",
+  "https://unsplash.com",
+  "https://unsplash.com"
+];
+---
+<section id="gallery" class="py-28 lg:py-36 bg-[#0C0A08]">
+  <div class="max-w-7xl mx-auto px-6 lg:px-10">
+    
+    <!-- العنوان / Header -->
+    <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-6 mb-12">
+      <div>
+        <div class="flex items-center gap-4 mb-6">
+          <div class="h-px w-8 bg-[#C8973A]" />
+          <span class="uppercase tracking-widest text-[#C8973A] text-[0.58rem] tracking-[0.3em]">
+            Impressionen
+          </span>
+        </div>
+        <h2 class="text-[#F2EDE4] font-serif font-light text-[clamp(2.8rem,5.5vw,5rem)] leading-[0.95] tracking-tight">
+          Kulinarische<br />
+          <span class="italic font-normal text-[#C8973A]">Momente.</span>
+        </h2>
+      </div>
+      <p class="max-w-xs text-[#F2EDE4]/40 text-sm font-light leading-relaxed">
+        Jeder Besuch bei uns ist ein einzigartiges Erlebnis. Diese Bilder geben Ihnen einen kleinen Einblick in die Atmosphäre unseres Hauses.
+      </p>
+    </div>
+
+    <!-- مظهر الـ Mosaic المخصص للكمبيوتر / Desktop Grid -->
+    <div class="hidden lg:grid gap-4 grid-cols-4 grid-rows-[repeat(3,260px)]">
+      
+      <div class="relative overflow-hidden group col-span-1 row-span-2">
+        <img src={images[0]} alt="Gallery 1" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 brightness-[0.8] saturate-[0.7]" />
+        <div class="absolute inset-0 bg-[#C8973A]/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+      </div>
+
+      <div class="relative overflow-hidden group col-span-1 row-span-1">
+        <img src={images[1]} alt="Gallery 2" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 brightness-[0.75] saturate-[0.65]" />
+        <div class="absolute inset-0 bg-[#C8973A]/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+      </div>
+
+      <div class="relative overflow-hidden group col-span-1 row-span-1">
+        <img src={images[2]} alt="Gallery 3" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 brightness-[0.75] saturate-[0.65]" />
+        <div class="absolute inset-0 bg-[#C8973A]/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+      </div>
+
+      <div class="relative overflow-hidden group col-span-1 row-span-2">
+        <img src={images[3]} alt="Gallery 4" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 brightness-[0.7] saturate-[0.65]" />
+        <div class="absolute inset-0 bg-[#C8973A]/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+      </div>
+
+      <div class="relative overflow-hidden group col-span-1 row-span-1">
+        <img src={images[4]} alt="Gallery 5" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 brightness-[0.75] saturate-[0.65]" />
+        <div class="absolute inset-0 bg-[#C8973A]/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+      </div>
+
+      <div class="relative overflow-hidden group col-span-1 row-span-1">
+        <img src={images[5]} alt="Gallery 6" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 brightness-[0.75] saturate-[0.65]" />
+        <div class="absolute inset-0 bg-[#C8973A]/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+      </div>
+
+      <!-- الصورة العريضة الطويلة في الأسفل / Full-width bottom strip -->
+      <div class="relative overflow-hidden group col-span-4 row-span-1">
+        <img src={images[6]} alt="Gallery Large" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 brightness-[0.65] saturate-[0.6] object-[center_30%]" />
+        <div class="absolute inset-0 bg-[#0C0A08]/20 flex items-center justify-center">
+          <span class="font-serif text-[clamp(1.5rem,4vw,3rem)] text-[#F2EDE4]/15 italic font-light tracking-[0.08em]">
+            Ein Blick hinter die Kulissen der Küche.
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- التصميم المخصص للهواتف لضمان أداء وسرعة عالية / Mobile Layout -->
+    <div class="grid lg:hidden grid-cols-2 gap-3">
+      {images.slice(0, 6).map((img) => (
+        <div class="relative overflow-hidden group aspect-[4/3] rounded-lg">
+          <img src={img} alt="Mobile Gallery" class="w-full h-full object-cover brightness-[0.75] saturate-[0.65]" />
+        </div>
+      ))}
+    </div>
+
+  </div>
+</section>

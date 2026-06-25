@@ -1,0 +1,70 @@
+---
+// src/components/templates/restaurant-light/Reservation.astro
+const { restaurantSlug } = Astro.props;
+---
+<section id="reservation" class="py-20 bg-amber-50/40 px-6 border-t border-b border-amber-100/50">
+  <div class="max-w-3xl mx-auto bg-white p-8 md:p-12 rounded-3xl shadow-xl border border-amber-100/60 space-y-8">
+    <div class="text-center space-y-2">
+      <h2 class="text-3xl font-black text-gray-900">Tisch reservieren</h2>
+      <p class="text-gray-500 text-sm">Sichern Sie sich Ihren Platz schnell und einfach online.</p>
+    </div>
+    <form id="restaurant-booking-form-light" data-slug={restaurantSlug} class="space-y-4">
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <input type="text" id="bl-name" required placeholder="Ihr Name" class="w-full bg-gray-50 border border-gray-200 px-4 py-3.5 rounded-xl text-sm text-gray-800 focus:border-orange-500 focus:bg-white outline-none transition-all" />
+        <input type="tel" id="bl-phone" required placeholder="Telefonnummer" class="w-full bg-gray-50 border border-gray-200 px-4 py-3.5 rounded-xl text-sm text-gray-800 focus:border-orange-500 focus:bg-white outline-none transition-all" />
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <input type="number" id="bl-guests" min="1" max="20" value="2" required class="w-full bg-gray-50 border border-gray-200 px-4 py-3.5 rounded-xl text-sm text-gray-800 focus:border-orange-500 focus:bg-white outline-none transition-all" />
+        <input type="date" id="bl-date" required class="w-full bg-gray-50 border border-gray-200 px-4 py-3.5 rounded-xl text-sm text-gray-800 focus:border-orange-500 focus:bg-white outline-none transition-all" />
+        <input type="time" id="bl-time" required class="w-full bg-gray-50 border border-gray-200 px-4 py-3.5 rounded-xl text-sm text-gray-800 focus:border-orange-500 focus:bg-white outline-none transition-all" />
+      </div>
+      <div id="booking-status-light" class="hidden text-sm p-4 rounded-xl font-bold"></div>
+      <button type="submit" id="bl-submit-btn" class="w-full py-4 bg-orange-500 text-white font-bold rounded-xl text-sm uppercase tracking-wider hover:bg-orange-600 transition-all shadow-md cursor-pointer border-none">Reservierung senden</button>
+    </form>
+  </div>
+</section>
+
+<script>
+  // نستخدم نفس المنطق لقراءة رابط المتصفح وإرسال البيانات ديناميكياً للـ API Endpoint
+  document.getElementById('restaurant-booking-form-light')?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const form = e.target as HTMLFormElement;
+    const msgBox = document.getElementById('booking-status-light');
+    const submitBtn = document.getElementById('bl-submit-btn') as HTMLButtonElement;
+    if (!msgBox || !submitBtn) return;
+
+    submitBtn.disabled = true;
+    submitBtn.innerText = "WIRD GESENDET...";
+
+    const payload = {
+      name: (document.getElementById('bl-name') as HTMLInputElement).value,
+      phone: (document.getElementById('bl-phone') as HTMLInputElement).value,
+      guests: (document.getElementById('bl-guests') as HTMLInputElement).value,
+      date: (document.getElementById('bl-date') as HTMLInputElement).value,
+      time: (document.getElementById('bl-time') as HTMLInputElement).value,
+      restaurantSlug: window.location.pathname.split('/').pop()
+    };
+
+    try {
+      const res = await fetch('/api/booking', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      if (res.ok) {
+        msgBox.className = "p-4 rounded-xl font-bold bg-emerald-50 text-emerald-700 block";
+        msgBox.innerText = "Vielen Dank! Ihre Reservierungsanfrage wurde erfolgreich gesendet.";
+        form.reset();
+      } else {
+        msgBox.className = "p-4 rounded-xl font-bold bg-red-50 text-red-700 block";
+        msgBox.innerText = "Fehler beim Senden. Bitte Felder prüfen.";
+      }
+    } catch {
+      msgBox.className = "p-4 rounded-xl font-bold bg-red-50 text-red-700 block";
+      msgBox.innerText = "Verbindung fehlgeschlagen.";
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.innerText = "RESERVIERUNG SENDEN";
+    }
+  });
+</script>

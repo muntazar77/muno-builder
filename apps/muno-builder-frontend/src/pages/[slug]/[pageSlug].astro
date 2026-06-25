@@ -1,0 +1,44 @@
+---
+// src/pages/[slug]/[pageSlug].astro
+export const prerender = false; // تفعيل الـ SSR
+import '../../styles/global.css'; // استيراد ملف CSS العام
+import RenderSections from '../../components/templates/RenderSections.astro';
+import { getWebsiteData, getCustomPageData } from '../../lib/api';
+
+// قراءة الروابط من المتصفح ديناميكياً
+const { slug, pageSlug } = Astro.params;
+
+// 1. جلب بيانات الموقع الأساسية (لمعرفة اسم المطعم والتمبلت والروابط)
+const websiteData = await getWebsiteData(slug || '');
+// 2. جلب بيانات الصفحة المخصصة التي طلبها الزائر الآن
+const pageData = await getCustomPageData(slug || '', pageSlug || '');
+
+// إذا لم يجد العميل أو لم يجد الصفحة المخصصة، حوّل لـ 404
+if (!websiteData || !pageData) {
+  return Astro.redirect('/404');
+}
+
+const currentTemplate = websiteData.template_name || 'luxury';
+---
+
+<html lang="de" dir="ltr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>{pageData.title} - {websiteData.client_name}</title>
+  </head>
+  <body class={currentTemplate === 'luxury' ? 'bg-[#0C0A08] text-white' : 'bg-white text-gray-900'}>
+    
+    <!-- هيدر الموقع ديناميكي حسب التمبلت -->
+    <RenderSections renderZone="header" templateName={currentTemplate} clientName={websiteData.client_name} />
+    
+    <!-- 🚀 السحر هنا: رندرة السكاشن التي اختارها ورتبها العميل بنفسه من لوحة التحكم لهذه الصفحة بالذات -->
+    <div class="pt-20">
+      <RenderSections sections={pageData.sections} templateName={currentTemplate} />
+    </div>
+    
+    <!-- فوتر الموقع ديناميكي حسب التمبلت -->
+    <RenderSections renderZone="footer" templateName={currentTemplate} clientName={websiteData.client_name} address={websiteData.address_text} />
+    
+  </body>
+</html>

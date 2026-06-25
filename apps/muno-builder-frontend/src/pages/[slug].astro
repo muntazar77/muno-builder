@@ -1,0 +1,56 @@
+---
+// src/pages/[slug].astro
+export const prerender = false; // تفعيل الـ SSR للمنصة
+import '../styles/global.css'; // استيراد ملف CSS العام
+import RenderSections from '../components/templates/RenderSections.astro';
+import Menu from '../components/common/Menu.astro'; // مكون المنيو ذو التبويبات المشترك
+import QRCodeSection from '../components/common/QRCodeSection.astro'; // مكون الـ QR المشترك
+import { getWebsiteData } from '../lib/api'; // دالة جلب البيانات من Strapi v5
+
+// 1. قراءة الـ slug الحالي من المتصفح (مثل bella-italia)
+const { slug } = Astro.params;
+
+// 2. جلب البيانات من الداتابيز
+const websiteData = await getWebsiteData(slug || '');
+
+// إذا لم يجد المطعم، حوّل الزائر لصفحة 404 الألمانية
+if (!websiteData) {
+  return Astro.redirect('/404'); 
+}
+
+// 3. استخراج اسم التمبلت المختار في لوحة التحكم (إما luxury أو light)
+const currentTemplate = websiteData.template_name || 'luxury';
+---
+
+<html lang="de" dir="ltr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>{websiteData.client_name}</title>
+  </head>
+  
+  <!-- تغيير خلفية الموقع كاملاً أوتوماتيكياً بناءً على نوع الثيم المختار للعميل -->
+  <body class={currentTemplate === 'luxury' ? 'bg-[#0C0A08] text-white' : 'bg-white text-gray-900'}>
+    
+    <!-- 🅰️ رندرة الهيدر المخصص لهذا الثيم ديناميكياً -->
+  <RenderSections 
+  renderZone="header" 
+  templateName={currentTemplate} 
+  clientName={websiteData.client_name} 
+  headerLinks={websiteData.header_links} 
+/>
+  
+    <!-- 🅱️ رندرة السكاشن الديناميكية المرتبة في الباكيند (Hero, Features...) -->
+    <RenderSections sections={websiteData.page_sections} templateName={currentTemplate} />
+    
+
+    <!-- 🅴️ رندرة الفوتر المخصص لهذا الثيم ديناميكياً -->
+    <RenderSections 
+  renderZone="footer" 
+  templateName={currentTemplate} 
+  clientName={websiteData.client_name} 
+  address={websiteData.address_text} 
+  footer_link_groups={websiteData.footer_link_groups} 
+/>
+  </body>
+</html>

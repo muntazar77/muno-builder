@@ -1,0 +1,20 @@
+---
+// src/components/templates/restaurant-light/Location.astro
+const { title, address, google_maps_url } = Astro.props;
+---
+<section id="contact" class="py-20 bg-white px-6">
+  <div class="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-12 items-center">
+    <div class="md:col-span-5 space-y-4 text-left">
+      <span class="text-orange-500 font-bold text-xs uppercase tracking-wider">Anfahrt</span>
+      <h2 class="text-3xl font-black text-gray-950 tracking-tight">{title || "Kommen Sie vorbei!"}</h2>
+      <p class="text-gray-600 text-sm leading-relaxed">Wir freuen uns auf Ihren Besuch. Sie finden uns leicht erreichbar an unserem Hauptstandort.</p>
+      <div class="text-sm text-gray-700 bg-gray-50 p-4 rounded-xl border border-gray-100 font-medium whitespace-pre-line">
+        📍 {address}
+      </div>
+    </div>
+    <div class="md:col-span-7 h-[300px] bg-gray-100 rounded-3xl border border-gray-200 flex flex-col items-center justify-center gap-3">
+      <span class="text-sm font-bold text-gray-400">Google Maps</span>
+      <a href={google_maps_url || "https://google.com"} target="_blank" rel="noopener noreferrer" class="px-6 py-2.5 bg-gray-900 hover:bg-gray-800 text-white rounded-xl text-xs font-bold uppercase tracking-wider no-underline transition-colors shadow-sm">In Maps öffnen</a>
+    </div>
+  </div>
+</section>

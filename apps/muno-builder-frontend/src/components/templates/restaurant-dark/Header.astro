@@ -1,0 +1,90 @@
+---
+// src/components/Header.astro
+const { clientName = "Maison Dalí" } = Astro.props;
+---
+<header 
+  id="main-header"
+  class="fixed top-0 left-0 right-0 z-50 transition-all duration-500 bg-transparent"
+>
+  <div class="max-w-7xl mx-auto px-6 lg:px-10">
+    <div class="flex items-center justify-between h-20 lg:h-24">
+      
+      <!-- الشعار / Logo -->
+      <a href="#" class="flex flex-col leading-none font-serif">
+        <span class="text-[0.55rem] tracking-[0.3em] uppercase text-[#C8973A] mb-1">
+          Est. 2008
+        </span>
+        <span class="text-2xl font-medium tracking-tight text-[#F2EDE4] sm:text-3xl">
+          {clientName}
+        </span>
+      </a>
+
+      <!-- القائمة لمتصفح الكمبيوتر / Desktop Nav -->
+      <nav class="hidden lg:flex items-center gap-10">
+        <a href="#menu" class="text-[0.7rem] font-medium tracking-[0.18em] uppercase text-[#F2EDE4]/55 hover:text-[#F2EDE4] transition-colors duration-300">Speisekarte</a>
+        <a href="#gallery" class="text-[0.7rem] font-medium tracking-[0.18em] uppercase text-[#F2EDE4]/55 hover:text-[#F2EDE4] transition-colors duration-300">Galerie</a>
+        <a href="#hours" class="text-[0.7rem] font-medium tracking-[0.18em] uppercase text-[#F2EDE4]/55 hover:text-[#F2EDE4] transition-colors duration-300">Öffnungszeiten</a>
+        <a href="#contact" class="text-[0.7rem] font-medium tracking-[0.18em] uppercase text-[#F2EDE4]/55 hover:text-[#F2EDE4] transition-colors duration-300">Kontakt</a>
+      </nav>
+
+      <!-- زر الحجز للكمبيوتر / Reserve CTA -->
+      <div class="hidden lg:flex items-center gap-6">
+        <a 
+          href="#reservation" 
+          class="px-7 py-2.5 text-[0.65rem] font-semibold tracking-[0.22em] uppercase border border-[#C8973A] text-[#C8973A] hover:bg-[#C8973A] hover:text-[#0C0A08] transition-all duration-300"
+        >
+          Tisch reservieren
+        </a>
+      </div>
+
+      <!-- زر الموبايل / Mobile Hamburger Button -->
+      <button 
+        id="menu-toggle"
+        class="lg:hidden p-2 text-[#F2EDE4] focus:outline-none" 
+        aria-label="Menü öffnen"
+      >
+        <svg xmlns="http://w3.org" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+        </svg>
+      </button>
+
+    </div>
+  </div>
+
+  <!-- قائمة الموبايل المنسدلة الافتراضية / Mobile Menu -->
+  <div id="mobile-menu" class="hidden lg:hidden bg-[#0C0A08]/97 border-t border-[#F2EDE4]/10">
+    <nav class="flex flex-col px-6 py-8 gap-6">
+      <a href="#menu" class="text-[0.8rem] tracking-[0.2em] uppercase text-[#F2EDE4] py-2 border-b border-[#F2EDE4]/5">Speisekarte</a>
+      <a href="#gallery" class="text-[0.8rem] tracking-[0.2em] uppercase text-[#F2EDE4] py-2 border-b border-[#F2EDE4]/5">Galerie</a>
+      <a href="#hours" class="text-[0.8rem] tracking-[0.2em] uppercase text-[#F2EDE4] py-2 border-b border-[#F2EDE4]/5">Öffnungszeiten</a>
+      <a href="#contact" class="text-[0.8rem] tracking-[0.2em] uppercase text-[#F2EDE4] py-2 border-b border-[#F2EDE4]/5">Kontakt</a>
+      <a href="#reservation" class="mt-4 py-3 text-center text-xs tracking-[0.2em] uppercase border border-[#C8973A] text-[#C8973A]">
+        Tisch reservieren
+      </a>
+    </nav>
+  </div>
+</header>
+
+<script>
+  // كود جافا سكريبت خفيف جداً وصافي مدمج لإدارة تأثيرات الهيدر والموبايل
+  const header = document.getElementById('main-header');
+  const menuToggle = document.getElementById('menu-toggle');
+  const mobileMenu = document.getElementById('mobile-menu');
+
+  // تأثير سكرول الهيدر ليتحول إلى غامق وضبابي عند النزول مثل المواقع الفاخرة
+  window.addEventListener('scroll', () => {
+    if (window.scrollY > 50) {
+      header?.classList.remove('bg-transparent');
+      header?.classList.add('bg-[#0C0A08]/88', 'backdrop-blur-md', 'border-b', 'border-[#F2EDE4]/10');
+    } else {
+      header?.classList.remove('bg-[#0C0A08]/88', 'backdrop-blur-md', 'border-b', 'border-[#F2EDE4]/10');
+      header?.classList.add('bg-transparent');
+    }
+  });
+
+  // فتح وإغلاق قائمة الموبايل
+  menuToggle?.addEventListener('click', () => {
+    mobileMenu?.classList.toggle('hidden');
+  });
+</script>
+   

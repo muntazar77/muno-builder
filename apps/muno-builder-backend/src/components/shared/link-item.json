@@ -1,0 +1,16 @@
+{
+  "collectionName": "components_shared_link_items",
+  "info": {
+    "displayName": "link-item"
+  },
+  "options": {},
+  "attributes": {
+    "label": {
+      "type": "string"
+    },
+    "url": {
+      "type": "string"
+    }
+  },
+  "config": {}
+}

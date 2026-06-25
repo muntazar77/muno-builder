@@ -1,5 +1,17 @@
 import type { Schema, Struct } from '@strapi/strapi';
 
+export interface SectionsAbout extends Struct.ComponentSchema {
+  collectionName: 'components_sections_abouts';
+  info: {
+    displayName: 'About';
+  };
+  attributes: {
+    description: Schema.Attribute.Text;
+    image: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios'>;
+    title: Schema.Attribute.String;
+  };
+}
+
 export interface SectionsFeatures extends Struct.ComponentSchema {
   collectionName: 'components_sections_features';
   info: {
@@ -9,6 +21,14 @@ export interface SectionsFeatures extends Struct.ComponentSchema {
     items: Schema.Attribute.Component<'shared.items', true>;
     section_title: Schema.Attribute.String;
   };
+}
+
+export interface SectionsFoodMenu extends Struct.ComponentSchema {
+  collectionName: 'components_sections_food_menus';
+  info: {
+    displayName: 'food-menu';
+  };
+  attributes: {};
 }
 
 export interface SectionsHero extends Struct.ComponentSchema {
@@ -24,6 +44,39 @@ export interface SectionsHero extends Struct.ComponentSchema {
     cta_button: Schema.Attribute.Component<'shared.cta-button', false>;
     description: Schema.Attribute.Text;
     title: Schema.Attribute.String;
+  };
+}
+
+export interface SectionsLocation extends Struct.ComponentSchema {
+  collectionName: 'components_sections_locations';
+  info: {
+    displayName: 'Location';
+  };
+  attributes: {
+    address: Schema.Attribute.Text;
+    email: Schema.Attribute.String;
+    google_maps_url: Schema.Attribute.Text;
+    phone: Schema.Attribute.Integer;
+    title: Schema.Attribute.String;
+  };
+}
+
+export interface SectionsQrCode extends Struct.ComponentSchema {
+  collectionName: 'components_sections_qr_codes';
+  info: {
+    displayName: 'qr-code';
+  };
+  attributes: {};
+}
+
+export interface SectionsTestimonials extends Struct.ComponentSchema {
+  collectionName: 'components_sections_testimonials';
+  info: {
+    displayName: 'Testimonials';
+  };
+  attributes: {
+    reviews: Schema.Attribute.Component<'shared.reviews', true>;
+    section_title: Schema.Attribute.String;
   };
 }
 
@@ -50,6 +103,28 @@ export interface SharedItems extends Struct.ComponentSchema {
   };
 }
 
+export interface SharedLinkGroup extends Struct.ComponentSchema {
+  collectionName: 'components_shared_link_groups';
+  info: {
+    displayName: 'link-group';
+  };
+  attributes: {
+    group_title: Schema.Attribute.String;
+    links: Schema.Attribute.Component<'shared.link-item', true>;
+  };
+}
+
+export interface SharedLinkItem extends Struct.ComponentSchema {
+  collectionName: 'components_shared_link_items';
+  info: {
+    displayName: 'link-item';
+  };
+  attributes: {
+    label: Schema.Attribute.String;
+    url: Schema.Attribute.String;
+  };
+}
+
 export interface SharedMedia extends Struct.ComponentSchema {
   collectionName: 'components_shared_media';
   info: {
@@ -70,6 +145,18 @@ export interface SharedQuote extends Struct.ComponentSchema {
   attributes: {
     body: Schema.Attribute.Text;
     title: Schema.Attribute.String;
+  };
+}
+
+export interface SharedReviews extends Struct.ComponentSchema {
+  collectionName: 'components_shared_reviews';
+  info: {
+    displayName: 'reviews';
+  };
+  attributes: {
+    name: Schema.Attribute.String;
+    stars: Schema.Attribute.Integer;
+    text: Schema.Attribute.String;
   };
 }
 
@@ -115,12 +202,20 @@ export interface SharedSlider extends Struct.ComponentSchema {
 declare module '@strapi/strapi' {
   export module Public {
     export interface ComponentSchemas {
+      'sections.about': SectionsAbout;
       'sections.features': SectionsFeatures;
+      'sections.food-menu': SectionsFoodMenu;
       'sections.hero': SectionsHero;
+      'sections.location': SectionsLocation;
+      'sections.qr-code': SectionsQrCode;
+      'sections.testimonials': SectionsTestimonials;
       'shared.cta-button': SharedCtaButton;
       'shared.items': SharedItems;
+      'shared.link-group': SharedLinkGroup;
+      'shared.link-item': SharedLinkItem;
       'shared.media': SharedMedia;
       'shared.quote': SharedQuote;
+      'shared.reviews': SharedReviews;
       'shared.rich-text': SharedRichText;
       'shared.seo': SharedSeo;
       'shared.slider': SharedSlider;

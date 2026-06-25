@@ -1,0 +1,29 @@
+---
+// src/components/templates/restaurant-light/FeaturedDishes.astro
+const bestSellers = [
+  { name: "Crispy Chicken Burger", price: "11.50 €", img: "https://unsplash.com" },
+  { name: "BBQ Bacon Burger", price: "13.90 €", img: "https://unsplash.com" },
+  { name: "Süßkartoffel-Fritten", price: "4.50 €", img: "https://unsplash.com" }
+];
+---
+<section class="py-20 bg-gray-50 px-6 border-t border-b border-gray-100">
+  <div class="max-w-6xl mx-auto space-y-12">
+    <div class="text-center">
+      <span class="text-orange-500 font-bold text-xs uppercase tracking-wider">Bestseller</span>
+      <h2 class="text-3xl md:text-4xl font-black text-gray-900 mt-1">Beliebte Gerichte</h2>
+    </div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+      {bestSellers.map(item => (
+        <div class="bg-white rounded-3xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-md transition-all group">
+          <div class="h-48 overflow-hidden bg-gray-100">
+            <img src={item.img} alt={item.name} class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+          </div>
+          <div class="p-6 flex items-center justify-between">
+            <h3 class="font-bold text-gray-900 text-lg">{item.name}</h3>
+            <span class="text-orange-500 font-black text-lg">{item.price}</span>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

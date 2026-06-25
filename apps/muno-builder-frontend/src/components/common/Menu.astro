@@ -1,0 +1,176 @@
+---
+// src/components/Menu.astro
+import { getRestaurantMenu } from '../../lib/api'; // تأكد من مسار ملف الـ API الخاص بك
+
+const { restaurantSlug } = Astro.props;
+
+const dishes = await getRestaurantMenu(restaurantSlug || '');
+
+// Aggressives Logging für das Terminal, um die exakte v5-Struktur zu sehen
+console.log("🔍 Strapi v5 Dishes Array Length:", dishes.length);
+if (dishes.length > 0) {
+  console.log("Sample Dish Raw Structure:", JSON.stringify(dishes[0], null, 2));
+}
+
+const menuByCategory = dishes.reduce((acc: any, dish: any) => {
+  // Strapi v5 Fallback-Suche für relationale Datenstrukturen
+  const categoryObj = dish.category?.data?.attributes || dish.category?.attributes || dish.category;
+  const categoryName = categoryObj?.name || dish.category?.name || "Sonstiges";
+  
+  if (!acc[categoryName]) {
+    acc[categoryName] = [];
+  }
+  acc[categoryName].push(dish);
+  return acc;
+}, {});
+
+const categories = Object.keys(menuByCategory);
+console.log("🍏 Kategorien im Menü aktuell:", categories);
+
+
+// قراءة رابط الـ .env لدمجه بالصورة لمنع المشاكل البصرية
+const baseUrl = import.meta.env.PUBLIC_STRAPI_URL || 'http://localhost:1337';
+
+
+
+---
+
+<section id="menu" class="py-24 px-4 sm:px-6 bg-white text-gray-800">
+  <div class="max-w-6xl mx-auto">
+    
+    <!-- رأس الصفحة والنصوص التعريفية -->
+    <div class="text-center mb-12">
+      <h2 class="text-3xl md:text-5xl font-black text-gray-950 mb-4 tracking-tight">Speisekarte</h2>
+      <p class="text-gray-500 max-w-md mx-auto text-sm md:text-base">Genießen Sie unsere köstlichen Gerichte, die mit Liebe und frischen Zutaten zubereitet werden.</p>
+    </div>
+
+    {categories.length === 0 ? (
+      <div class="text-center py-16 bg-gray-50 rounded-3xl border border-dashed border-gray-200">
+        <p class="text-gray-400 text-sm">Derzeit sind keine Gerichte für dieses Restaurant verfügbar.</p>
+      </div>
+    ) : (
+      <!-- 💡 شريط النوافذ (Tabs) الفاتح - يدعم التمرير الجانبي السلس على الهواتف -->
+      <div class="flex gap-2 mb-14 border-b border-gray-100 pb-px overflow-x-auto scrollbar-none justify-start sm:justify-center px-2">
+        {categories.map((category, index) => (
+          <button 
+            data-clean-target={category.replace(/[^a-zA-Z0-9]/g, '-')}
+            class={`menu-pro-tab-btn px-6 py-3.5 text-xs md:text-sm font-bold tracking-wide border-b-2 transition-all duration-300 whitespace-nowrap bg-transparent cursor-pointer ${index === 0 ? 'border-amber-500 text-amber-600' : 'border-transparent text-gray-400 hover:text-gray-600'}`}
+          >
+            {category}
+            <span class="ml-1.5 px-1.5 py-0.5 text-[0.65rem] bg-gray-100 text-gray-500 rounded-full font-mono group-hover:bg-amber-50">
+              {menuByCategory[category].length}
+            </span>
+          </button>
+        ))}
+      </div>
+
+      <!-- صناديق محتوى الأطباق المربوطة بالنوافذ -->
+      <div class="relative min-h-[300px]">
+        {categories.map((category, index) => (
+          <div 
+            id={category.replace(/[^a-zA-Z0-9]/g, '-')}
+            class={`menu-pro-tab-content transition-all duration-500 ${index === 0 ? 'block opacity-100' : 'hidden opacity-0 absolute inset-0 pointer-events-none'}`}
+          >
+            
+            <!-- 💡 بناء جرد (Grid) احترافي وجميل جداً متجاوب بالكامل -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8 animate-fade-in">
+              {menuByCategory[category].map((dish: any) => {
+               const imgUrl = dish.image?.url 
+                        ? `${baseUrl}${dish.image.url}` 
+                        : '/fallback2.png'; // رابط الصورة الافتراضية في حال عدم وجود صورة
+                return (
+                  <div class="flex gap-4 p-4 rounded-2xl bg-white border border-gray-100 shadow-sm hover:shadow-md hover:border-amber-100 transition-all duration-300 group">
+                    <!-- صورة الطبق المنسقة والمربعة على الهاتف -->
+                    <div class="w-24 h-24 sm:w-28 sm:h-28 shrink-0 overflow-hidden rounded-xl bg-gray-50">
+                      <img 
+                        src={imgUrl} 
+                        alt={dish.name} 
+                        class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                      />
+                    </div>
+                    
+                    <!-- تفاصيل الطبق والأسعار -->
+                    <div class="flex-1 min-w-0 flex flex-col justify-between py-1">
+                      <div>
+                        <div class="flex items-baseline justify-between gap-3 mb-1.5">
+                          <h4 class="text-base sm:text-lg font-bold text-gray-900 truncate group-hover:text-amber-600 transition-colors">
+                            {dish.name}
+                          </h4>
+                          <!-- خط السعر الفاخر باليورو -->
+                          <span class="text-base sm:text-lg font-extrabold text-amber-600 whitespace-nowrap">
+                            {Number(dish.price).toFixed(2)} €
+                          </span>
+                        </div>
+                        <p class="text-xs sm:text-sm text-gray-500 leading-relaxed line-clamp-2">
+                          {dish.description || "Keine Beschreibung verfügbar."}
+                        </p>
+                      </div>
+                      
+                      <!-- وسم تجميلي صغير لزيادة جمال التصميم -->
+                      <div class="mt-2 flex items-center gap-1.5">
+                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                        <span class="text-[0.65rem] text-gray-400 font-medium uppercase tracking-wider">Frisch Zubereitet</span>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+            
+          </div>
+        ))}
+      </div>
+    )}
+
+  </div>
+</section>
+
+<script>
+  // دالة تشغيل التبديل الاحترافي لجميع أقسام المنيو الأربعة
+  function initProMenuTabs() {
+    const buttons = document.querySelectorAll('.menu-pro-tab-btn');
+    const contents = document.querySelectorAll('.menu-pro-tab-content');
+
+    buttons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const targetId = btn.getAttribute('data-clean-target');
+
+        // 1. إعادة الأزرار لشكلها غير النشط
+        buttons.forEach(b => {
+          b.classList.remove('border-amber-500', 'text-amber-600');
+          b.classList.add('border-transparent', 'text-gray-400');
+        });
+
+        // 2. تفعيل الزر النشط المكبوس حالياً
+        btn.classList.remove('border-transparent', 'text-gray-400');
+        btn.classList.add('border-amber-500', 'text-amber-600');
+
+        // 3. التحكم بالظهور والاختفاء الآمن لشبكات الأطباق
+        contents.forEach(content => {
+          content.classList.add('hidden', 'opacity-0', 'absolute', 'inset-0', 'pointer-events-none');
+          content.classList.remove('block', 'opacity-100');
+        });
+
+        const targetContent = document.getElementById(targetId || '');
+        if (targetContent) {
+          targetContent.classList.remove('hidden', 'absolute', 'inset-0', 'pointer-events-none');
+          targetContent.classList.add('block', 'opacity-100');
+        }
+      });
+    });
+  }
+
+  // تفعيل الدالة داخل محرك Astro فور جاهزية الصفحة
+  document.addEventListener('DOMContentLoaded', initProMenuTabs);
+</script>
+
+<style>
+  /* تأثير حركي ناعم جداً عند الانتقال بين النوافذ */
+  .animate-fade-in {
+    animation: fadeIn 0.4s ease-out forwards;
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+</style>

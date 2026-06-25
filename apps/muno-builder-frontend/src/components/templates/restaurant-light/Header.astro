@@ -1,0 +1,19 @@
+---
+// src/components/templates/restaurant-light/Header.astro
+const { clientName = "Burger & Bites" } = Astro.props;
+---
+<header id="light-header" class="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-md border-b border-gray-100 transition-all duration-300 shadow-sm">
+  <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+    <a href="#" class="text-xl font-black text-gray-900 tracking-tight flex items-center gap-2">
+      🍔 {clientName}
+    </a>
+    <nav class="hidden lg:flex items-center gap-8">
+      <a href="#menu" class="text-sm font-bold text-gray-600 hover:text-orange-500 transition-colors">Speisekarte</a>
+      <a href="#about" class="text-sm font-bold text-gray-600 hover:text-orange-500 transition-colors">Über uns</a>
+      <a href="#reservation" class="text-sm font-bold text-gray-600 hover:text-orange-500 transition-colors">Reservierung</a>
+    </nav>
+    <a href="#reservation" class="hidden lg:block bg-orange-500 hover:bg-orange-600 text-white font-bold px-6 py-2.5 rounded-xl text-sm transition-all shadow-sm">
+      Jetzt Bestellen
+    </a>
+  </div>
+</header>
