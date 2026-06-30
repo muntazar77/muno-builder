@@ -1,0 +1,81 @@
+---
+interface ServiceItem {
+  title?: string | null;
+  label?: string | null;
+  description?: string | null;
+  text?: string | null;
+}
+
+interface Props {
+  eyebrow?: string | null;
+  title?: string | null;
+  heading?: string | null;
+  description?: string | null;
+  items?: ServiceItem[] | null;
+}
+
+const safeText = (value: unknown, fallback: string): string => {
+  if (typeof value === 'string' && value.trim()) {
+    return value.trim();
+  }
+
+  return fallback;
+};
+
+const {
+  eyebrow,
+  title,
+  heading,
+  description,
+  items
+} = Astro.props as Props;
+
+const headingText = safeText(heading ?? title, 'Services tailored for demanding professional environments');
+const introText = safeText(description, 'From strategic positioning to seamless client engagement, our templates support the full professional-service journey.');
+const serviceItems = Array.isArray(items) ? items : [];
+---
+<section id="services" class="bg-[color:var(--brand-surface)] py-24">
+  <div class="mx-auto max-w-7xl px-6 lg:px-8">
+    <div class="mx-auto max-w-3xl text-center">
+      <p class="text-sm font-semibold uppercase tracking-[0.28em] text-[color:var(--brand-accent)]">
+        {safeText(eyebrow, 'Core services')}
+      </p>
+      <h2 class="mt-4 text-3xl font-semibold tracking-tight text-[color:var(--brand-text)] sm:text-4xl">
+        {headingText}
+      </h2>
+      <p class="mt-5 text-lg leading-8 text-[color:var(--brand-muted)]">
+        {introText}
+      </p>
+    </div>
+
+    <div class="mt-16 grid gap-8 lg:grid-cols-3">
+      {serviceItems.length > 0 ? (
+        serviceItems.map((item) => (
+          <div class="rounded-[1.75rem] border border-[color:var(--brand-border)] bg-white p-8 shadow-sm">
+            <div class="mb-5 h-11 w-11 rounded-full bg-[color:var(--brand-primary)]/10" />
+            <h3 class="text-xl font-semibold text-[color:var(--brand-text)]">{safeText(item.title ?? item.label, 'Consulting')}</h3>
+            <p class="mt-4 text-base leading-7 text-[color:var(--brand-muted)]">{safeText(item.description ?? item.text, 'Professional guidance designed for growth and operational clarity.')}</p>
+          </div>
+        ))
+      ) : (
+        <>
+          <div class="rounded-[1.75rem] border border-[color:var(--brand-border)] bg-white p-8 shadow-sm">
+            <div class="mb-5 h-11 w-11 rounded-full bg-[color:var(--brand-primary)]/10" />
+            <h3 class="text-xl font-semibold text-[color:var(--brand-text)]">Practice growth</h3>
+            <p class="mt-4 text-base leading-7 text-[color:var(--brand-muted)]">Position your practice for higher trust, better visibility, and stronger conversion.</p>
+          </div>
+          <div class="rounded-[1.75rem] border border-[color:var(--brand-border)] bg-white p-8 shadow-sm">
+            <div class="mb-5 h-11 w-11 rounded-full bg-[color:var(--brand-primary)]/10" />
+            <h3 class="text-xl font-semibold text-[color:var(--brand-text)]">Client experience</h3>
+            <p class="mt-4 text-base leading-7 text-[color:var(--brand-muted)]">Create intelligent, calm interactions that reduce friction and build confidence.</p>
+          </div>
+          <div class="rounded-[1.75rem] border border-[color:var(--brand-border)] bg-white p-8 shadow-sm">
+            <div class="mb-5 h-11 w-11 rounded-full bg-[color:var(--brand-primary)]/10" />
+            <h3 class="text-xl font-semibold text-[color:var(--brand-text)]">Operational clarity</h3>
+            <p class="mt-4 text-base leading-7 text-[color:var(--brand-muted)]">Support the systems behind the service with a sharper digital presence.</p>
+          </div>
+        </>
+      )}
+    </div>
+  </div>
+</section>

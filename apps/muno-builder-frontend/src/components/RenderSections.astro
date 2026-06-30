@@ -26,6 +26,14 @@ import Location from './templates/restaurant-light/Location.astro';
 import Menu from './common/Menu.astro';        
 import QRCodeSection from './common/QRCodeSection.astro'; 
 
+// 3. استيراد الثيم الجديد corporate-clean
+import CorporateHeader from './templates/corporate-clean/CorporateHeader.astro';
+import CorporateFooter from './templates/corporate-clean/CorporateFooter.astro';
+import CorporateHero from './templates/corporate-clean/CorporateHero.astro';
+import CorporateAbout from './templates/corporate-clean/CorporateAbout.astro';
+import CorporateServices from './templates/corporate-clean/CorporateServices.astro';
+import CorporateContact from './templates/corporate-clean/CorporateContact.astro';
+
 // 💡 هندسة استقبال صلبة: تفكيك الحقول الأساسية وتجميع الباقي بالكامل داخل كائن rest
 const { sections, templateName = 'luxury', renderZone, ...rest } = Astro.props;
 
@@ -57,6 +65,19 @@ const templatesRegistry: Record<string, any> = {
     'sections.location': Location,
     'sections.food-menu': Menu,        
     'sections.qr-code': QRCodeSection
+  },
+  'corporate-clean': {
+    'header': CorporateHeader,
+    'footer': CorporateFooter,
+    'sections.hero': CorporateHero,
+    'sections.features': CorporateServices,
+    'sections.about': CorporateAbout,
+    'sections.booking': CorporateContact,
+    'sections.gallery': CorporateAbout,
+    'sections.testimonials': CorporateServices,
+    'sections.location': CorporateContact,
+    'sections.food-menu': CorporateServices,
+    'sections.qr-code': CorporateContact
   }
 };
 

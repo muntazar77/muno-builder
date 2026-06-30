@@ -1,0 +1,104 @@
+---
+interface HeaderLink {
+  label?: string | null;
+  url?: string | null;
+  href?: string | null;
+}
+
+interface FooterGroup {
+  group_title?: string | null;
+  title?: string | null;
+  links?: HeaderLink[] | null;
+}
+
+interface Props {
+  clientName?: string | null;
+  address?: string | null;
+  footer_link_groups?: FooterGroup[] | null;
+  templateName?: string | null;
+}
+
+const safeText = (value: unknown, fallback: string): string => {
+  if (typeof value === 'string' && value.trim()) {
+    return value.trim();
+  }
+
+  return fallback;
+};
+
+const {
+  clientName,
+  address,
+  footer_link_groups,
+  templateName = 'corporate-clean'
+} = Astro.props as Props;
+
+const brandLabel = safeText(clientName, 'Northstar Advisory');
+const groups = Array.isArray(footer_link_groups) ? footer_link_groups : [];
+---
+<footer class="border-t border-[color:var(--brand-border)] bg-[color:var(--brand-secondary)] text-white" data-template={templateName}>
+  <div class="mx-auto max-w-7xl px-6 py-16 lg:px-8">
+    <div class="grid gap-12 lg:grid-cols-[1.2fr_0.8fr]">
+      <div class="space-y-4">
+        <p class="text-sm font-semibold uppercase tracking-[0.28em] text-[color:var(--brand-accent)]">Trusted advisory</p>
+        <h2 class="text-2xl font-semibold tracking-tight">{brandLabel}</h2>
+        <p class="max-w-xl text-sm leading-7 text-white/75">
+          {safeText(address, 'Strategic support for modern businesses, medical practices, and legal teams that value clarity, trust, and growth.')}
+        </p>
+      </div>
+
+      <div class="grid gap-8 sm:grid-cols-2">
+        {groups.length > 0 ? (
+          groups.map((group) => (
+            <div>
+              <h3 class="mb-4 text-sm font-semibold uppercase tracking-[0.24em] text-[color:var(--brand-accent)]">
+                {safeText(group.group_title ?? group.title, 'Company')}
+              </h3>
+              <ul class="space-y-3">
+                {Array.isArray(group.links) && group.links.length > 0 ? (
+                  group.links.map((link) => (
+                    <li>
+                      <a
+                        href={safeText(link.url ?? link.href, '#')}
+                        class="text-sm text-white/75 transition-colors duration-200 hover:text-white"
+                      >
+                        {safeText(link.label, 'Learn more')}
+                      </a>
+                    </li>
+                  ))
+                ) : (
+                  <li>
+                    <a href="#contact" class="text-sm text-white/75 transition-colors duration-200 hover:text-white">Contact</a>
+                  </li>
+                )}
+              </ul>
+            </div>
+          ))
+        ) : (
+          <>
+            <div>
+              <h3 class="mb-4 text-sm font-semibold uppercase tracking-[0.24em] text-[color:var(--brand-accent)]">Services</h3>
+              <ul class="space-y-3 text-sm text-white/75">
+                <li><a href="#services" class="transition-colors duration-200 hover:text-white">Consulting</a></li>
+                <li><a href="#services" class="transition-colors duration-200 hover:text-white">Operations</a></li>
+                <li><a href="#services" class="transition-colors duration-200 hover:text-white">Compliance</a></li>
+              </ul>
+            </div>
+            <div>
+              <h3 class="mb-4 text-sm font-semibold uppercase tracking-[0.24em] text-[color:var(--brand-accent)]">Contact</h3>
+              <ul class="space-y-3 text-sm text-white/75">
+                <li><a href="mailto:hello@northstaradvisory.com" class="transition-colors duration-200 hover:text-white">hello@northstaradvisory.com</a></li>
+                <li><a href="#contact" class="transition-colors duration-200 hover:text-white">Book a strategy call</a></li>
+              </ul>
+            </div>
+          </>
+        )}
+      </div>
+    </div>
+
+    <div class="mt-12 flex flex-col gap-3 border-t border-white/10 pt-6 text-sm text-white/55 sm:flex-row sm:items-center sm:justify-between">
+      <p>© 2026 {brandLabel}. All rights reserved.</p>
+      <p>Built for modern organizations with a calm, premium digital presence.</p>
+    </div>
+  </div>
+</footer>

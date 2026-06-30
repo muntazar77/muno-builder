@@ -3,6 +3,7 @@
 export const prerender = false; // تفعيل الـ SSR للمنصة
 import '../styles/global.css'; // استيراد ملف CSS العام
 import RenderSections from '../components/RenderSections.astro';
+import CorporateLayout from '../components/templates/corporate-clean/CorporateLayout.astro';
 import Menu from '../components/common/Menu.astro'; // مكون المنيو ذو التبويبات المشترك
 import QRCodeSection from '../components/common/QRCodeSection.astro'; // مكون الـ QR المشترك
 import { getWebsiteData } from '../lib/api'; // دالة جلب البيانات من Strapi v5

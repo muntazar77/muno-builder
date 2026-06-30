@@ -1,0 +1,53 @@
+---
+interface Props {
+  eyebrow?: string | null;
+  title?: string | null;
+  heading?: string | null;
+  description?: string | null;
+  email?: string | null;
+  phone?: string | null;
+  address?: string | null;
+}
+
+const safeText = (value: unknown, fallback: string): string => {
+  if (typeof value === 'string' && value.trim()) {
+    return value.trim();
+  }
+
+  return fallback;
+};
+
+const {
+  eyebrow,
+  title,
+  heading,
+  description,
+  email,
+  phone,
+  address
+} = Astro.props as Props;
+
+const headingText = safeText(heading ?? title, 'Let’s build a stronger first impression');
+const introText = safeText(description, 'Reach out to discuss your website, practice growth goals, or long-term digital presence.');
+---
+<section id="contact" class="bg-[color:var(--brand-primary)] py-24 text-white">
+  <div class="mx-auto grid max-w-7xl gap-10 px-6 lg:grid-cols-[1fr_0.8fr] lg:px-8">
+    <div class="space-y-5">
+      <p class="text-sm font-semibold uppercase tracking-[0.28em] text-[color:var(--brand-accent)]">{safeText(eyebrow, 'Contact')}</p>
+      <h2 class="text-3xl font-semibold tracking-tight sm:text-4xl">{headingText}</h2>
+      <p class="max-w-2xl text-lg leading-8 text-white/80">{introText}</p>
+    </div>
+
+    <div class="rounded-[2rem] border border-white/10 bg-white/10 p-8 backdrop-blur">
+      <div class="space-y-4 text-sm leading-7 text-white/80">
+        <a href={`mailto:${safeText(email, 'hello@northstaradvisory.com')}`} class="block text-lg font-semibold text-white transition-opacity duration-200 hover:opacity-90">
+          {safeText(email, 'hello@northstaradvisory.com')}
+        </a>
+        <a href={`tel:${safeText(phone, '+49 30 123456')}`} class="block text-lg font-semibold text-white transition-opacity duration-200 hover:opacity-90">
+          {safeText(phone, '+49 30 123456')}
+        </a>
+        <p>{safeText(address, 'Berlin · Munich · Remote worldwide')}</p>
+      </div>
+    </div>
+  </div>
+</section>

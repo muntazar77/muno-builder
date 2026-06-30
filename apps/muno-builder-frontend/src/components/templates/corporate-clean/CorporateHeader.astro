@@ -1,0 +1,71 @@
+---
+interface HeaderLink {
+  label?: string | null;
+  url?: string | null;
+  href?: string | null;
+}
+
+interface Props {
+  clientName?: string | null;
+  brandName?: string | null;
+  headerLinks?: HeaderLink[] | null;
+  templateName?: string | null;
+}
+
+const safeText = (value: unknown, fallback: string): string => {
+  if (typeof value === 'string' && value.trim()) {
+    return value.trim();
+  }
+
+  return fallback;
+};
+
+const {
+  clientName,
+  brandName,
+  headerLinks,
+  templateName = 'corporate-clean'
+} = Astro.props as Props;
+
+const brandLabel = safeText(clientName ?? brandName, 'Northstar Advisory');
+const navigation = Array.isArray(headerLinks) ? headerLinks : [];
+---
+<header class="sticky top-0 z-50 border-b border-[color:var(--brand-border)] bg-[color:var(--brand-surface)]/95 backdrop-blur" data-template={templateName}>
+  <div class="mx-auto flex max-w-7xl items-center justify-between px-6 py-4 lg:px-8">
+    <a href="/" class="flex items-center gap-3 text-[color:var(--brand-text)] no-underline">
+      <span class="flex h-11 w-11 items-center justify-center rounded-full border border-[color:var(--brand-border)] bg-[color:var(--brand-primary)] text-sm font-semibold uppercase tracking-[0.2em] text-white">
+        NA
+      </span>
+      <span class="flex flex-col leading-none">
+        <span class="text-sm font-semibold tracking-[0.28em] text-[color:var(--brand-accent)] uppercase">Corporate</span>
+        <span class="text-lg font-semibold tracking-tight">{brandLabel}</span>
+      </span>
+    </a>
+
+    <nav class="hidden items-center gap-8 lg:flex" aria-label="Primary navigation">
+      {navigation.length > 0 ? (
+        navigation.map((link) => (
+          <a
+            href={safeText(link.url ?? link.href, '#')}
+            class="text-sm font-medium text-[color:var(--brand-muted)] transition-colors duration-200 hover:text-[color:var(--brand-primary)]"
+          >
+            {safeText(link.label, 'Services')}
+          </a>
+        ))
+      ) : (
+        <>
+          <a href="#services" class="text-sm font-medium text-[color:var(--brand-muted)] transition-colors duration-200 hover:text-[color:var(--brand-primary)]">Services</a>
+          <a href="#about" class="text-sm font-medium text-[color:var(--brand-muted)] transition-colors duration-200 hover:text-[color:var(--brand-primary)]">About</a>
+          <a href="#contact" class="text-sm font-medium text-[color:var(--brand-muted)] transition-colors duration-200 hover:text-[color:var(--brand-primary)]">Contact</a>
+        </>
+      )}
+    </nav>
+
+    <a
+      href="#contact"
+      class="rounded-full border border-[color:var(--brand-primary)] bg-[color:var(--brand-primary)] px-5 py-2.5 text-sm font-semibold text-white transition-colors duration-200 hover:opacity-90"
+    >
+      Book Consultation
+    </a>
+  </div>
+</header>

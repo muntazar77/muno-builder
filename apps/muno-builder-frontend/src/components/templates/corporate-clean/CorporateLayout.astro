@@ -1,0 +1,66 @@
+---
+interface Props {
+  brandColorPreset?: 'navy-gold' | 'emerald-slate' | 'charcoal-gray';
+  title?: string;
+  description?: string;
+}
+
+const {
+  brandColorPreset = 'navy-gold',
+  title = 'Corporate Excellence',
+  description = 'Trusted guidance for ambitious companies, medical practices, and law firms.'
+} = Astro.props as Props;
+
+const themePresets = {
+  'navy-gold': {
+    primary: '#0F2A4A',
+    secondary: '#182F4A',
+    accent: '#C9A046',
+    surface: '#F6F3EC',
+    text: '#10253C',
+    muted: '#5D6B7A',
+    border: '#D9D2C2'
+  },
+  'emerald-slate': {
+    primary: '#14453E',
+    secondary: '#1E5C51',
+    accent: '#8BAE7A',
+    surface: '#F5F8F6',
+    text: '#18312C',
+    muted: '#5D726C',
+    border: '#DCE6E2'
+  },
+  'charcoal-gray': {
+    primary: '#1F2933',
+    secondary: '#2F3B46',
+    accent: '#9DA9B3',
+    surface: '#F3F4F6',
+    text: '#111827',
+    muted: '#64748B',
+    border: '#D8DEE8'
+  }
+} as const;
+
+const selectedPreset = themePresets[brandColorPreset] ?? themePresets['navy-gold'];
+const bodyStyle = [
+  `--brand-primary:${selectedPreset.primary}`,
+  `--brand-secondary:${selectedPreset.secondary}`,
+  `--brand-accent:${selectedPreset.accent}`,
+  `--brand-surface:${selectedPreset.surface}`,
+  `--brand-text:${selectedPreset.text}`,
+  `--brand-muted:${selectedPreset.muted}`,
+  `--brand-border:${selectedPreset.border}`
+].join('; ');
+---
+<!doctype html>
+<html lang="en" class="h-full">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <title>{title}</title>
+  </head>
+  <body style={bodyStyle} class="min-h-full bg-[color:var(--brand-surface)] text-[color:var(--brand-text)] antialiased">
+    <slot />
+  </body>
+</html>

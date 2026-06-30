@@ -40,7 +40,8 @@
       "type": "enumeration",
       "enum": [
         "luxury",
-        "light"
+        "light",
+        "corporate-clean"
       ]
     },
     "bookings": {

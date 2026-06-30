@@ -1,0 +1,113 @@
+---
+interface ImageLike {
+  url?: string | null;
+}
+
+interface Props {
+  eyebrow?: string | null;
+  title?: string | null;
+  heading?: string | null;
+  description?: string | null;
+  intro?: string | null;
+  body?: string | null;
+  content?: string | null;
+  image?: ImageLike | null;
+  hero_image?: ImageLike | null;
+  background_image?: ImageLike | null;
+  stats?: Array<{ label?: string | null; value?: string | null }> | null;
+}
+
+const safeText = (value: unknown, fallback: string): string => {
+  if (typeof value === 'string' && value.trim()) {
+    return value.trim();
+  }
+
+  return fallback;
+};
+
+const {
+  eyebrow,
+  title,
+  heading,
+  description,
+  intro,
+  body,
+  content,
+  image,
+  hero_image,
+  background_image,
+  stats
+} = Astro.props as Props;
+
+const strapiBaseUrl = import.meta.env.PUBLIC_STRAPI_URL || 'http://localhost:1337';
+const imageUrl = image?.url ?? hero_image?.url ?? background_image?.url;
+const resolvedImageUrl = imageUrl ? `${strapiBaseUrl}${imageUrl}` : null;
+const headingText = safeText(heading ?? title, 'A modern, trusted presence for high-stakes industries');
+const introText = safeText(intro ?? description ?? body ?? content, 'We design elegant digital experiences for offices, medical practices, and legal teams that need clarity, credibility, and conversion.');
+const statItems = Array.isArray(stats) ? stats : [];
+---
+<section id="about" class="bg-white py-24">
+  <div class="mx-auto grid max-w-7xl gap-12 px-6 lg:grid-cols-[1.05fr_0.95fr] lg:px-8">
+    <div class="space-y-8">
+      <div class="space-y-4">
+        <p class="text-sm font-semibold uppercase tracking-[0.28em] text-[color:var(--brand-accent)]">
+          {safeText(eyebrow, 'About our approach')}
+        </p>
+        <h2 class="text-3xl font-semibold tracking-tight text-[color:var(--brand-text)] sm:text-4xl">
+          {headingText}
+        </h2>
+        <p class="max-w-2xl text-lg leading-8 text-[color:var(--brand-muted)]">
+          {introText}
+        </p>
+      </div>
+
+      <div class="grid gap-4 sm:grid-cols-3">
+        {statItems.length > 0 ? (
+          statItems.map((stat) => (
+            <div class="rounded-2xl border border-[color:var(--brand-border)] bg-[color:var(--brand-surface)] p-5">
+              <p class="text-2xl font-semibold text-[color:var(--brand-primary)]">{safeText(stat.value, '24/7')}</p>
+              <p class="mt-2 text-sm text-[color:var(--brand-muted)]">{safeText(stat.label, 'Support')}</p>
+            </div>
+          ))
+        ) : (
+          <>
+            <div class="rounded-2xl border border-[color:var(--brand-border)] bg-[color:var(--brand-surface)] p-5">
+              <p class="text-2xl font-semibold text-[color:var(--brand-primary)]">24/7</p>
+              <p class="mt-2 text-sm text-[color:var(--brand-muted)]">Availability</p>
+            </div>
+            <div class="rounded-2xl border border-[color:var(--brand-border)] bg-[color:var(--brand-surface)] p-5">
+              <p class="text-2xl font-semibold text-[color:var(--brand-primary)]">97%</p>
+              <p class="mt-2 text-sm text-[color:var(--brand-muted)]">Client satisfaction</p>
+            </div>
+            <div class="rounded-2xl border border-[color:var(--brand-border)] bg-[color:var(--brand-surface)] p-5">
+              <p class="text-2xl font-semibold text-[color:var(--brand-primary)]">3x</p>
+              <p class="mt-2 text-sm text-[color:var(--brand-muted)]">Faster response</p>
+            </div>
+          </>
+        )}
+      </div>
+    </div>
+
+    <div class="rounded-[2rem] border border-[color:var(--brand-border)] bg-[color:var(--brand-surface)] p-8 shadow-sm">
+      {resolvedImageUrl ? (
+        <img src={resolvedImageUrl} alt={headingText} class="mb-8 h-64 w-full rounded-[1.5rem] object-cover" />
+      ) : (
+        <div class="mb-8 flex h-64 items-center justify-center rounded-[1.5rem] border border-dashed border-[color:var(--brand-border)] bg-white/70">
+          <div class="text-center">
+            <div class="mx-auto mb-3 h-12 w-12 rounded-full bg-[color:var(--brand-primary)]/10" />
+            <p class="text-sm font-medium text-[color:var(--brand-muted)]">Professional imagery can be added here</p>
+          </div>
+        </div>
+      )}
+
+      <div class="space-y-4 text-[color:var(--brand-muted)]">
+        <p class="text-base leading-7">
+          We combine strategic messaging, premium presentation, and polished user journeys to help professional services brands feel confident online.
+        </p>
+        <p class="text-base leading-7">
+          Every experience is built to support credibility, trust, and a clearer path to action for visitors who need guidance now.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>

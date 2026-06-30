@@ -715,7 +715,9 @@ export interface ApiWebsiteWebsite extends Struct.CollectionTypeSchema {
     pages: Schema.Attribute.Relation<'oneToMany', 'api::page.page'>;
     publishedAt: Schema.Attribute.DateTime;
     slug: Schema.Attribute.String;
-    template_name: Schema.Attribute.Enumeration<['luxury', 'light']>;
+    template_name: Schema.Attribute.Enumeration<
+      ['luxury', 'light', 'corporate-clean']
+    >;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;

@@ -1,31 +1,31 @@
-[
-  {
-    "category": "Vorspeisen",
-    "items": [
-      { "name": "Bruschetta", "price": 6.50, "desc": "Geröstetes Brot mit Tomaten und Basilikum." },
-      { "name": "Gemischter Salat", "price": 5.90, "desc": "Frischer Gartensalat mit Hausdressing." }
-    ]
-  },
-  {
-    "category": "Hauptgerichte",
-    "items": [
-      { "name": "Rinderfilet", "price": 24.50, "desc": "Zartes Rindfleisch mit Rosmarinkartoffeln." },
-      { "name": "Lachsfilet", "price": 21.00, "desc": "Gebratener Lachs mit Zitronen-Dill-Soße." },
-      { "name": "Hähnchenbrust", "price": 18.50, "desc": "Gegrilltes Hähnchen mit mediterranem Gemüse." }
-    ]
-  },
-  {
-    "category": "Pizza & Pasta",
-    "items": [
-      { "name": "Pizza Margherita", "price": 9.50, "desc": "Klassisch mit Tomaten, Mozzarella und Basilikum." },
-      { "name": "Spaghetti Carbonara", "price": 12.50, "desc": "Original italienisch mit Ei und Speck." }
-    ]
-  },
-  {
-    "category": "Getränke",
-    "items": [
-      { "name": "Apfelschorle", "price": 3.50, "desc": "Erfrischend, direkt aus der Region." },
-      { "name": "Hauswein Rot", "price": 5.50, "desc": "Trockener italienischer Rotwein (0,2l)." }
-    ]
-  }
-]
+# Muno Builder
+
+Muno Builder is a monorepo for creating content-driven websites with a Strapi backend and an Astro frontend. It is designed for multi-tenant projects where each client can have their own branded template, content sections, and SSR-rendered pages.
+
+## Project structure
+- apps/muno-builder-backend: Strapi v5 CMS, API, and admin configuration.
+- apps/muno-builder-frontend: Astro 6 frontend with SSR pages, shared components, and template-based rendering.
+- docs: project documentation and architecture notes.
+
+## Tech stack
+- Frontend: Astro 6, TypeScript, Tailwind CSS
+- Backend: Strapi v5, Node.js
+- Rendering: Server-side rendering (SSR)
+
+## Quick start
+### Backend
+```bash
+cd apps/muno-builder-backend
+npm install
+npm run develop
+```
+
+### Frontend
+```bash
+cd apps/muno-builder-frontend
+npm install
+npm run dev
+```
+
+## Notes
+The frontend uses a dynamic section renderer so content from Strapi can be mapped to reusable UI components. New visual themes and vertical templates can be added under the frontend template folder.
