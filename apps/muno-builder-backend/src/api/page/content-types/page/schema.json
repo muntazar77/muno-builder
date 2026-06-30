@@ -39,11 +39,13 @@
         }
       },
       "components": [
-        "shared.rich-text",
         "sections.testimonials",
+        "sections.qr-code",
         "sections.location",
+        "sections.hero",
         "sections.food-menu",
         "sections.features",
+        "sections.booking",
         "sections.about"
       ]
     },

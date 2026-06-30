@@ -647,11 +647,13 @@ export interface ApiPagePage extends Struct.CollectionTypeSchema {
     publishedAt: Schema.Attribute.DateTime;
     sections: Schema.Attribute.DynamicZone<
       [
-        'shared.rich-text',
         'sections.testimonials',
+        'sections.qr-code',
         'sections.location',
+        'sections.hero',
         'sections.food-menu',
         'sections.features',
+        'sections.booking',
         'sections.about',
       ]
     > &
@@ -707,6 +709,7 @@ export interface ApiWebsiteWebsite extends Struct.CollectionTypeSchema {
         'sections.about',
         'sections.food-menu',
         'sections.qr-code',
+        'sections.booking',
       ]
     >;
     pages: Schema.Attribute.Relation<'oneToMany', 'api::page.page'>;

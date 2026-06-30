@@ -2,7 +2,7 @@
 // src/pages/[slug].astro
 export const prerender = false; // تفعيل الـ SSR للمنصة
 import '../styles/global.css'; // استيراد ملف CSS العام
-import RenderSections from '../components/templates/RenderSections.astro';
+import RenderSections from '../components/RenderSections.astro';
 import Menu from '../components/common/Menu.astro'; // مكون المنيو ذو التبويبات المشترك
 import QRCodeSection from '../components/common/QRCodeSection.astro'; // مكون الـ QR المشترك
 import { getWebsiteData } from '../lib/api'; // دالة جلب البيانات من Strapi v5

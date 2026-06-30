@@ -1,19 +1,59 @@
 ---
 // src/components/templates/restaurant-light/Footer.astro
-const { clientName = "Burger & Bites" } = Astro.props;
+
+// استقبال البيانات الحية القادمة من السيرفر وعبر مصنع المكونات الموحد
+const { clientName = "Burger & Bites", address = "", footer_link_groups = [] } = Astro.props;
 ---
-<footer class="bg-gray-50 border-t border-gray-100 text-gray-500 text-sm">
-  <div class="max-w-6xl mx-auto px-6 py-12 space-y-8">
-    <div class="flex flex-col sm:flex-row items-center justify-between gap-6 border-b border-gray-200 pb-8">
-      <a href="#" class="text-xl font-black text-gray-900 tracking-tight no-underline">🍔 {clientName}</a>
-      <div class="flex gap-6">
-        <a href="#" class="text-gray-500 hover:text-orange-500 no-underline text-xs font-bold uppercase">Impressum</a>
-        <a href="#" class="text-gray-500 hover:text-orange-500 no-underline text-xs font-bold uppercase">Datenschutz</a>
+<footer class="bg-gray-50 border-t border-gray-100 text-gray-500 text-sm antialiased">
+  <div class="max-w-6xl mx-auto px-6 py-12 lg:py-16 space-y-12">
+    
+    <!-- القسم العلوي: البراند وأعمدة الروابط الديناميكية المفرودة -->
+    <div class="grid grid-cols-1 md:grid-cols-12 gap-10 items-start border-b border-gray-200 pb-12">
+      
+      <!-- براند وتفاصيل العميل -->
+      <div class="md:col-span-4 space-y-3">
+        <a href="#" class="text-xl font-black text-gray-900 tracking-tight no-underline block">
+          🍔 {clientName}
+        </a>
+        {address && (
+          <p class="text-xs text-gray-400 font-normal leading-relaxed max-w-[30ch]">
+            {address}
+          </p>
+        )}
       </div>
+
+      <!-- 💡 السحر البرمجي المصلح: رندرة وتكرار أعمدة الروابط بناءً على مجموعات العميل في Strapi -->
+      <div class="md:col-span-8 grid grid-cols-2 sm:grid-cols-3 gap-8">
+        {footer_link_groups && footer_link_groups.map((group: any) => (
+          <div class="space-y-3">
+            <!-- عنوان العمود الرئيسي (مثل: Rechtliches أو Navigation) -->
+            <h4 class="text-[0.65rem] font-bold tracking-[0.15em] uppercase text-gray-400">
+              {group.group_title}
+            </h4>
+            <ul class="space-y-2 list-none p-0 m-0">
+              {/* قراءة حقل الـ links الداخلي المستخرج من عمق قاعدة البيانات بنجاح */}
+              {group.links && group.links.map((link: any) => (
+                <li>
+                  <a 
+                    href={link.url || "#"} 
+                    class="text-xs text-gray-500 hover:text-orange-500 no-underline transition-colors duration-200 font-medium block"
+                  >
+                    {link.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
+
     </div>
+
+    <!-- الشريط السفلي وحفظ الحقوق -->
     <div class="flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-gray-400">
       <p>&copy; 2026 {clientName}. Alle Rechte vorbehalten.</p>
       <p class="font-medium text-gray-500">Powered by Mono Builder</p>
     </div>
+
   </div>
 </footer>

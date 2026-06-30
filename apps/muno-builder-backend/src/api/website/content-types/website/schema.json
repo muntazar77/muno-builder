@@ -26,7 +26,8 @@
         "sections.location",
         "sections.about",
         "sections.food-menu",
-        "sections.qr-code"
+        "sections.qr-code",
+        "sections.booking"
       ]
     },
     "dishes": {

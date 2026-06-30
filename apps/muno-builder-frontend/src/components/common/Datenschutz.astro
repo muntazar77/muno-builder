@@ -1,0 +1,35 @@
+---
+// src/components/common/Datenschutz.astro
+interface Props {
+  companyName: string;
+  ownerName: string;
+  street: string;
+  zip: string;
+  city: string;
+  email: string;
+}
+
+const { companyName, ownerName, street, zip, city, email } = Astro.props;
+---
+<section class="max-w-4xl mx-auto px-6 py-16 bg-white text-gray-800 antialiased font-sans">
+  <h1 class="text-3xl font-extrabold text-gray-900 border-b pb-4 mb-6">Datenschutzerklärung</h1>
+  
+  <div class="space-y-6 text-sm leading-relaxed">
+    <h2 class="text-xl font-bold text-gray-900">1. Datenschutz auf einen Blick</h2>
+    <p>Die Betreiber dieser Seiten nehmen den Schutz Ihrer persönlichen Daten sehr ernst. Wir behandeln Ihre personenbezogenen Daten vertraulich und entsprechend den gesetzlichen Datenschutzvorschriften sowie dieser Datenschutzerklärung.</p>
+
+    <h2 class="text-xl font-bold text-gray-900 mt-4">2. Verantwortliche Stelle</h2>
+    <p>Die verantwortliche Stelle für die Datenverarbeitung auf dieser Website ist:</p>
+    <div class="bg-gray-50 p-4 rounded-lg border border-gray-200 my-2">
+      <p class="font-bold">{companyName}</p>
+      <p>{street}</p>
+      <p>{zip} {city}</p>
+      <p class="mt-2"><span class="font-medium">Vertreten durch:</span> {ownerName}</p>
+      <p><span class="font-medium">E-Mail:</span> {email}</p>
+    </div>
+
+    <h2 class="text-xl font-bold text-gray-900 mt-4">3. Datenerfassung auf unserer Website</h2>
+    <h3 class="text-base font-bold text-gray-900 mb-1">Server-Log-Files</h3>
+    <p>Der Provider der Seiten erhebt und speichert automatisch Informationen in sogenannten Server-Log-Dateien, die Ihr Browser automatisch an uns übermittelt. Dies sind: Browsertyp und Browserversion, verwendetes Betriebssystem, Referrer URL, Hostname des zugreifenden Rechners, Uhrzeit der Serveranfrage und IP-Adresse. Diese Daten werden nicht mit anderen Datenquellen zusammengeführt. Grundlage für die Datenverarbeitung ist Art. 6 Abs. 1 lit. f DSGVO.</p>
+  </div>
+</section>

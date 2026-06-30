@@ -1,44 +1,76 @@
 ---
 // src/pages/[slug]/[pageSlug].astro
-export const prerender = false; // تفعيل الـ SSR
-import '../../styles/global.css'; // استيراد ملف CSS العام
-import RenderSections from '../../components/templates/RenderSections.astro';
-import { getWebsiteData, getCustomPageData } from '../../lib/api';
+export const prerender = false; // تفعيل وضع الـ SSR الكامل للمنصة لـ 50 زبون وأكثر
 
-// قراءة الروابط من المتصفح ديناميكياً
+import "../../styles/global.css"; // استيراد ملف CSS العام
+import RenderSections from "../../components/RenderSections.astro";
+import { getCustomPageData } from "../../lib/api";
+
 const { slug, pageSlug } = Astro.params;
 
-// 1. جلب بيانات الموقع الأساسية (لمعرفة اسم المطعم والتمبلت والروابط)
-const websiteData = await getWebsiteData(slug || '');
-// 2. جلب بيانات الصفحة المخصصة التي طلبها الزائر الآن
-const pageData = await getCustomPageData(slug || '', pageSlug || '');
-
-// إذا لم يجد العميل أو لم يجد الصفحة المخصصة، حوّل لـ 404
-if (!websiteData || !pageData) {
-  return Astro.redirect('/404');
+if (!slug || !pageSlug) {
+  return Astro.redirect("/404");
 }
 
-const currentTemplate = websiteData.template_name || 'luxury';
+// استدعاء دالة الـ API الهندسية المحدثة
+const pageData = await getCustomPageData(slug || "", pageSlug || "");
+
+// إذا لم يعثر على الصفحة أو كانت العلاقة مقطوعة في الباكيند، نقذف 404 فوراً لعزل البيانات
+if (!pageData) {
+  return new Response(null, {
+    status: 404,
+    statusText: "Page Not Found",
+  });
+}
+
+const { title, sections, tenant } = pageData;
+
+// 💡 توحيد الهوية: قراءة الثيم الحقيقي المختار للعميل من الموقع الأب (luxury أو light)
+const currentTemplate = tenant.template_name || "luxury";
+// console.log("Current tenant@@@@@@@@@@@@@:", tenant);
 ---
 
 <html lang="de" dir="ltr">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width" />
-    <title>{pageData.title} - {websiteData.client_name}</title>
+    <title>{title} | {tenant.client_name}</title>
   </head>
-  <body class={currentTemplate === 'luxury' ? 'bg-[#0C0A08] text-white' : 'bg-white text-gray-900'}>
+  
+  <!-- توحيد خلفية الموقع بالكامل وبطريقة آلية بناءً على الثيم الموحد للمستأجر -->
+  <body class={currentTemplate === "luxury" ? "bg-[#0C0A08] text-white" : "bg-white text-gray-900"}>
     
-    <!-- هيدر الموقع ديناميكي حسب التمبلت -->
-    <RenderSections renderZone="header" templateName={currentTemplate} clientName={websiteData.client_name} />
+    <!-- 🅰️ رندرة الهيدر المشترك الموحد بنجاح تام وبألوان ثيم العميل الأساسي -->
+    <RenderSections 
+      renderZone="header" 
+      templateName={currentTemplate} 
+      clientName={tenant.client_name} 
+      headerLinks={tenant.header_links} 
+    /> 
+    <br />
+<br />
+  
+    <!-- 🅱️ رندرة السكاشن الديناميكية المسحوبة لهذه الصفحة الفرعية بالذات في Strapi -->
+    <main class="w-full min-h-[60vh]">
+      {sections && sections.length > 0 ? (
+        <RenderSections sections={sections} templateName={currentTemplate} />
+      ) : (
+        <div class="py-24 text-center max-w-md mx-auto px-4">
+          <div class="text-4xl mb-3">🏗️</div>
+          <h2 class="text-lg font-bold mb-1">Hier entsteht etwas Neues!</h2>
+          <p class="text-sm opacity-70">Fügen Sie im Strapi Komponenten zu dieser Seite hinzu.</p>
+        </div>
+      )}
+    </main>
     
-    <!-- 🚀 السحر هنا: رندرة السكاشن التي اختارها ورتبها العميل بنفسه من لوحة التحكم لهذه الصفحة بالذات -->
-    <div class="pt-20">
-      <RenderSections sections={pageData.sections} templateName={currentTemplate} />
-    </div>
-    
-    <!-- فوتر الموقع ديناميكي حسب التمبلت -->
-    <RenderSections renderZone="footer" templateName={currentTemplate} clientName={websiteData.client_name} address={websiteData.address_text} />
-    
+    <!-- 🅴️ رندرة الفوتر المشترك الموحد بنجاح تام وبألوان ثيم العميل الأساسي -->
+   <!-- i want to make this footer always down not up like last section do it for me  -->
+      <RenderSections 
+        renderZone="footer" 
+        templateName={currentTemplate} 
+        clientName={tenant.client_name} 
+        address={tenant.address_text} 
+        footer_link_groups={tenant.footer_link_groups} 
+      />
   </body>
 </html>

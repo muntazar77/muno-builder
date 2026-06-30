@@ -6,32 +6,24 @@ export const POST: APIRoute = async ({ request }) => {
     const body = await request.json();
     const { name, phone, guests, date, time, restaurantSlug } = body;
 
-    // 💡 طباعة كونسول لوج احترافي في الـ Terminal عند استقبال أي طلب حجز جديد
-    console.log("==================================================");
-    console.log(`📥 NEW BOOKING REQUEST RECEIVED AT: ${new Date().toISOString()}`);
-    console.log(`👤 Client Name: ${name}`);
-    console.log(`📞 Phone: ${phone}`);
-    console.log(`👥 Guests: ${guests}`);
-    console.log(`📅 Date & Time: ${date} @ ${time}`);
-    console.log(`🔗 Restaurant Route (Slug): ${restaurantSlug}`);
-    console.log("==================================================");
-
+    // 1. التحقق من الحقول
     if (!name || !phone || !guests || !date || !time || !restaurantSlug) {
-      console.log("❌ Booking Rejected: Missing required fields.");
       return new Response(JSON.stringify({ error: 'Alle Felder sind erforderlich.' }), { status: 400 });
     }
 
-    const websiteRes = await fetch(`http://localhost:1337/api/websites?filters[slug][$eq]=${restaurantSlug}`);
+    // 2. جلب الـ ID الخاص بالمطعم من Strapi v5
+    const STRAPI_BASE_URL = import.meta.env.PUBLIC_STRAPI_URL || 'http://localhost:1337';
+    const websiteRes = await fetch(`${STRAPI_BASE_URL}/api/websites?filters[slug][$eq]=${restaurantSlug}`);
     const websiteJson = await websiteRes.json();
-    const restaurantId = websiteJson?.data?.[0]?.id;
+    
+    // في Strapi v5 تأتي البيانات مباشرة داخل مصفوفة مسطحة
+    const restaurantId = websiteJson?.data?.[0]?.id || websiteJson?.data?.id;
 
     if (!restaurantId) {
-      console.log(`❌ Booking Rejected: Restaurant with slug "${restaurantSlug}" not found in database.`);
-      return new Response(JSON.stringify({ error: 'Restaurant nicht gefunden.' }), { status: 404 });
+      return new Response(JSON.stringify({ error: 'Restaurant in der Datenbank nicht gefunden.' }), { status: 404 });
     }
 
-    console.log(`🎯 Successfully mapped restaurant slug to Database ID: ${restaurantId}`);
-
+    // 3. بناء الـ Payload المتوافق 100% مع علاقة Many-to-Many لـ Strapi v5
     const strapiPayload = {
       data: {
         name,
@@ -39,25 +31,29 @@ export const POST: APIRoute = async ({ request }) => {
         guests: parseInt(guests, 10),
         date,
         time,
-        websites: [restaurantId]
+        // 💡 في علاقة Many-to-Many نمرر مصفوفة تحتوي على الـ ID أو الـ documentId
+        websites: [restaurantId] 
       }
     };
 
-    const response = await fetch('http://localhost:1337/api/bookings', {
+    // 4. إرسال طلب الحفظ إلى الباكيند
+    const response = await fetch(`${STRAPI_BASE_URL}/api/bookings`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(strapiPayload),
     });
 
     if (!response.ok) {
-      throw new Error('Strapi DB Insertion Failed');
+      const errText = await response.text();
+      console.error('🚨 Strapi Error Response:', errText);
+      return new Response(JSON.stringify({ error: 'Fehler beim Speichern der Reservierung.' }), { status: response.status });
     }
 
-    console.log(`✅ SUCCESS: Booking for "${name}" successfully saved in Strapi v5 database.`);
+    // إرجاع نجاح الطلب
     return new Response(JSON.stringify({ success: true }), { status: 200 });
 
   } catch (error) {
-    console.error('🚨 SERVER ERROR IN BOOKING ENDPOINT:', error);
-    return new Response(JSON.stringify({ error: 'Serverfehler. Bitte später versuchen.' }), { status: 500 });
+    console.error('🚨 Booking Endpoint Error:', error);
+    return new Response(JSON.stringify({ error: 'Serverfehler. Bitte versuchen Sie es später erneut.' }), { status: 500 });
   }
 };

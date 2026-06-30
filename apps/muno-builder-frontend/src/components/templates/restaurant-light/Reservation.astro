@@ -36,14 +36,17 @@ const { restaurantSlug } = Astro.props;
     submitBtn.disabled = true;
     submitBtn.innerText = "WIRD GESENDET...";
 
-    const payload = {
-      name: (document.getElementById('bl-name') as HTMLInputElement).value,
-      phone: (document.getElementById('bl-phone') as HTMLInputElement).value,
-      guests: (document.getElementById('bl-guests') as HTMLInputElement).value,
-      date: (document.getElementById('bl-date') as HTMLInputElement).value,
-      time: (document.getElementById('bl-time') as HTMLInputElement).value,
-      restaurantSlug: window.location.pathname.split('/').pop()
-    };
+ const currentPath = window.location.pathname.replace(/\/+$/, ''); // حذف الشرطات المائلة الزائدة في النهاية
+const extractedSlug = currentPath.substring(currentPath.lastIndexOf('/') + 1);
+
+const payload = {
+  name: (document.getElementById('b-name') as HTMLInputElement || document.getElementById('bl-name') as HTMLInputElement).value,
+  phone: (document.getElementById('b-phone') as HTMLInputElement || document.getElementById('bl-phone') as HTMLInputElement).value,
+  guests: (document.getElementById('b-guests') as HTMLInputElement || document.getElementById('bl-guests') as HTMLInputElement).value,
+  date: (document.getElementById('b-date') as HTMLInputElement || document.getElementById('bl-date') as HTMLInputElement).value,
+  time: (document.getElementById('b-time') as HTMLInputElement || document.getElementById('bl-time') as HTMLInputElement).value,
+  restaurantSlug: extractedSlug // تمرير الـ slug النظيف والمحمي 100%
+};
 
     try {
       const res = await fetch('/api/booking', {

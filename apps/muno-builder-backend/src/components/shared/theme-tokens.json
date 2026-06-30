@@ -1,0 +1,22 @@
+{
+  "collectionName": "components_shared_theme_tokens",
+  "info": {
+    "displayName": "theme_tokens"
+  },
+  "options": {},
+  "attributes": {
+    "primary_color": {
+      "type": "string"
+    },
+    "hover_color": {
+      "type": "string"
+    },
+    "text_color": {
+      "type": "string"
+    },
+    "bg_color": {
+      "type": "string"
+    }
+  },
+  "config": {}
+}

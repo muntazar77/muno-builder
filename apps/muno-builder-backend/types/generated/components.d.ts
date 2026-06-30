@@ -12,6 +12,14 @@ export interface SectionsAbout extends Struct.ComponentSchema {
   };
 }
 
+export interface SectionsBooking extends Struct.ComponentSchema {
+  collectionName: 'components_sections_bookings';
+  info: {
+    displayName: 'Booking';
+  };
+  attributes: {};
+}
+
 export interface SectionsFeatures extends Struct.ComponentSchema {
   collectionName: 'components_sections_features';
   info: {
@@ -175,10 +183,24 @@ export interface SharedSeo extends Struct.ComponentSchema {
   };
 }
 
+export interface SharedThemeTokens extends Struct.ComponentSchema {
+  collectionName: 'components_shared_theme_tokens';
+  info: {
+    displayName: 'theme_tokens';
+  };
+  attributes: {
+    bg_color: Schema.Attribute.String;
+    hover_color: Schema.Attribute.String;
+    primary_color: Schema.Attribute.String;
+    text_color: Schema.Attribute.String;
+  };
+}
+
 declare module '@strapi/strapi' {
   export module Public {
     export interface ComponentSchemas {
       'sections.about': SectionsAbout;
+      'sections.booking': SectionsBooking;
       'sections.features': SectionsFeatures;
       'sections.food-menu': SectionsFoodMenu;
       'sections.hero': SectionsHero;
@@ -193,6 +215,7 @@ declare module '@strapi/strapi' {
       'shared.reviews': SharedReviews;
       'shared.rich-text': SharedRichText;
       'shared.seo': SharedSeo;
+      'shared.theme-tokens': SharedThemeTokens;
     }
   }
 }
